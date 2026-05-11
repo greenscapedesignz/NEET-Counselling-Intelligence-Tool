@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NEET India Counselling Intelligence Tool </title>
+<title>NEET India Counselling Intelligence Tool — Debugged Font Build</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -280,7 +280,7 @@
       </div>
       <div class="stat">
         <div class="k">Score / AIR / percentile</div>
-        <div class="v" id="statScore"> / — / —</div>
+        <div class="v" id="statScore">682 / — / —</div>
         <div class="s">Live estimate based on the NEET score entered.</div>
       </div>
       <div class="stat">
@@ -299,10 +299,10 @@
       </div>
       <div class="panel-body">
         <div class="fieldgrid">
-          <div class="field"><label>Candidate name</label><input id="name" value=" " /></div>
+          <div class="field"><label>Candidate name</label><input id="name" value="" /></div>
           <div class="field"><label>Exam year</label><input id="year" type="number" value="2026" /></div>
           <div class="field"><label>Attempt number</label><input id="attempt" type="number" min="1" value="1" /></div>
-          <div class="field"><label>NEET score</label><input id="score" type="number" min="1" max="720" value="682" /></div>
+          <div class="field"><label>NEET score</label><input id="score" type="number" min="1" max="720" value="" /></div>
           <div class="field"><label>Predicted AIR</label><input id="air" readonly /></div>
           <div class="field"><label>Percentile estimate</label><input id="percentile" readonly /></div>
           <div class="field"><label>Domicile state / UT</label><select id="domicile"></select></div>
@@ -502,7 +502,7 @@
                 </div>
                 <div class="printSummary">
                   <div class="summaryCard"><div class="k">Candidate</div><div class="v" id="pName"></div><div class="s" id="pYear">2026 · Attempt 1</div></div>
-                  <div class="summaryCard"><div class="k">Score / AIR / percentile</div><div class="v" id="pScore"> / — / —</div><div class="s">Live estimate from the current score field.</div></div>
+                  <div class="summaryCard"><div class="k">Score / AIR / percentile</div><div class="v" id="pScore">682 / — / —</div><div class="s">Live estimate from the current score field.</div></div>
                   <div class="summaryCard"><div class="k">Domicile / budget</div><div class="v" id="pDom">—</div><div class="s" id="pBud">—</div></div>
                 </div>
                 <div class="section">
@@ -1531,6 +1531,43 @@ function guardedPrint(){
     }
     window.print();
 }
+</script>
+
+
+<script>
+// ===== NEET Score Validation =====
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    const scoreInputs = document.querySelectorAll(
+        'input[type="number"], input[name*="score"], input[id*="score"]'
+    );
+
+    scoreInputs.forEach(input => {
+
+        input.setAttribute('max','720');
+        input.setAttribute('min','0');
+
+        input.addEventListener('input', function(){
+
+            let val = parseInt(this.value);
+
+            if(isNaN(val)) return;
+
+            if(val > 720){
+                this.value = 720;
+
+                alert('NEET score cannot exceed 720.');
+            }
+
+            if(val < 0){
+                this.value = 0;
+            }
+        });
+
+    });
+
+});
 </script>
 
 </body>
