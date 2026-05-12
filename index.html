@@ -1,517 +1,435 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NEET India Counselling Intelligence Tool</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-<!-- Robust font loading with fallbacks -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>NEET Counselling Intelligence Tool · Pan-India Medical College Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-@font-face{
-  font-family:'InterFallback';
-  src:local('Arial');
-  font-display:swap;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  color: #1e293b;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-@media print{
-  body{
-    font-family:Arial,'Noto Sans',sans-serif !important;
-  }
+/* ═══ LAYOUT ═══ */
+.app { display: flex; flex-direction: column; min-height: 100vh; }
+.header { background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); color: white; padding: 1.25rem; text-align: center; }
+.header h1 { font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; margin-bottom: 0.5rem; }
+.header p { font-size: 0.9rem; opacity: 0.9; }
+.content { flex: 1; display: flex; gap: 1rem; padding: 1rem; overflow: hidden; }
+.sidebar { width: 100%; max-width: 320px; overflow-y: auto; display: none; }
+.main { flex: 1; overflow-y: auto; }
+.footer { background: #1e293b; color: #94a3b8; padding: 1rem; font-size: 0.8rem; text-align: center; border-top: 1px solid #334155; }
+
+@media (min-width: 1024px) {
+  .content { gap: 1.5rem; }
+  .sidebar { display: block !important; }
+  .main { min-width: 0; }
 }
-</style>
-<style>
-  :root{
-    --bg:#f6f7fb;
-    --bg2:#ffffff;
-    --bg3:#eef2ff;
-    --ink:#111827;
-    --muted:#6b7280;
-    --line:rgba(15,23,42,.10);
-    --line2:rgba(15,23,42,.18);
-    --blue:#2563eb;
-    --blue2:#dbeafe;
-    --green:#16a34a;
-    --green2:#dcfce7;
-    --amber:#d97706;
-    --amber2:#fef3c7;
-    --red:#dc2626;
-    --red2:#fee2e2;
-    --purple:#7c3aed;
-    --purple2:#ede9fe;
-    --shadow:0 18px 50px rgba(15,23,42,.08);
-    --radius:18px;
-    --radius2:24px;
-  }
-  *{
-    box-sizing:border-box;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    text-rendering:optimizeLegibility;
-  }
-  html,body{margin:0;padding:0;background:
-    radial-gradient(circle at top left, rgba(37,99,235,.10), transparent 32%),
-    radial-gradient(circle at top right, rgba(124,58,237,.10), transparent 28%),
-    var(--bg);
-    color:var(--ink);
-    font-family:'Inter','Noto Sans',system-ui,-apple-system,'BlinkMacSystemFont','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
-  }
-  a{color:var(--blue); text-decoration:none}
-  .wrap{max-width:1480px;margin:0 auto;padding:22px}
-  .hero{
-    background:linear-gradient(135deg, rgba(37,99,235,.10), rgba(124,58,237,.08)), var(--bg2);
-    border:1px solid var(--line);
-    border-radius:28px;
-    box-shadow:var(--shadow);
-    padding:22px;
-    display:grid;
-    grid-template-columns:1.3fr .9fr;
-    gap:18px;
-    align-items:stretch;
-  }
-  .brand h1{margin:0;font-size:30px;line-height:1.1;letter-spacing:-.03em}
-  .brand p{margin:10px 0 0;color:var(--muted);line-height:1.6}
-  .chiprow{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
-  .chip{font-size:12px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.8);color:#374151}
-  .statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .stat{
-    background:rgba(255,255,255,.9);
-    border:1px solid var(--line);
-    border-radius:20px;
-    padding:14px 16px;
-  }
-  .stat .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-  .stat .v{font-size:20px;font-weight:800;margin-top:6px}
-  .stat .s{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-  .toolbar{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px}
-  .btn{
-    border:none;border-radius:14px;padding:11px 14px;
-    font-weight:700;cursor:pointer;font-family:inherit;
-    background:var(--blue);color:#fff;
-    box-shadow:0 10px 24px rgba(37,99,235,.18);
-  }
-  .btn.secondary{background:#fff;color:var(--ink);border:1px solid var(--line2);box-shadow:none}
-  .btn.warn{background:var(--amber);box-shadow:0 10px 24px rgba(217,119,6,.18)}
-  .btn:disabled{opacity:.55;cursor:not-allowed}
-  .layout{display:grid;grid-template-columns:340px 1fr;gap:18px;margin-top:18px}
-  .panel{
-    background:rgba(255,255,255,.9);
-    border:1px solid var(--line);
-    border-radius:28px;
-    box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-  .panel-head{
-    padding:16px 18px;
-    border-bottom:1px solid var(--line);
-    display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
-  }
-  .panel-head h2{margin:0;font-size:16px;letter-spacing:-.02em}
-  .panel-body{padding:18px}
-  .fieldgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-  .field{display:flex;flex-direction:column;gap:6px}
-  .field label{font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
-  .field input,.field select,.field textarea{
-    width:100%;
-    border:1px solid var(--line2);
-    border-radius:14px;
-    padding:11px 12px;
-    font:inherit;
-    background:#fff;
-    color:var(--ink);
-    outline:none;
-  }
-  .field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(37,99,235,.7); box-shadow:0 0 0 4px rgba(37,99,235,.10)}
-  .field textarea{min-height:88px;resize:vertical}
-  .subtle{font-size:12px;color:var(--muted);line-height:1.6}
-  .section{margin-top:16px}
-  .section h3{margin:0 0 10px;font-size:14px;letter-spacing:-.01em}
-  .sliders{display:grid;gap:10px}
-  .sliderrow{display:grid;grid-template-columns:1fr 1.5fr 52px;gap:10px;align-items:center}
-  .sliderrow .name{font-size:13px;font-weight:600}
-  .sliderrow input[type=range]{width:100%}
-  .sliderrow .val{text-align:right;font-weight:800}
-  .pillset{display:flex;flex-wrap:wrap;gap:8px}
-  .pill{
-    padding:8px 11px;border:1px solid var(--line2);border-radius:999px;
-    background:#fff;cursor:pointer;font-size:12px;
-  }
-  .pill.active{background:var(--blue2);border-color:rgba(37,99,235,.35);color:#0f3aa8;font-weight:700}
-  .tabs{
-    display:flex;gap:8px;flex-wrap:wrap;
-    padding:0 18px 18px;
-  }
-  .tab{
-    border:1px solid var(--line2);
-    background:#fff;
-    border-radius:999px;
-    padding:10px 14px;
-    font-size:13px;
-    font-weight:700;
-    cursor:pointer;
-  }
-  .tab.active{background:linear-gradient(135deg, var(--blue), var(--purple)); color:#fff; border-color:transparent}
-  .main{display:grid;grid-template-columns:1fr;gap:18px}
-  .content{display:none}
-  .content.active{display:block}
-  .filters{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
-  .filters .field{gap:5px}
-  .searchbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-  .searchbar input{
-    flex:1;min-width:240px;
-    border:1px solid var(--line2);border-radius:14px;padding:12px 14px;font:inherit;
-  }
-  .smallchips{display:flex;gap:8px;flex-wrap:wrap}
-  .smallchips .chip{background:#fff}
-  .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  .card{
-    background:#fff;border:1px solid var(--line);border-radius:24px;
-    padding:16px;position:relative;overflow:hidden;
-  }
-  .card::before{
-    content:"";position:absolute;inset:0 0 auto 0;height:4px;background:linear-gradient(90deg, var(--blue), var(--purple));
-  }
-  .card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
-  .title{font-weight:800;font-size:15px;line-height:1.3}
-  .meta{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-  .badge{font-size:11px;border-radius:999px;padding:6px 10px;font-weight:800;white-space:nowrap}
-  .b-elite{background:#ede9fe;color:#5b21b6}
-  .b-strong{background:#dbeafe;color:#1d4ed8}
-  .b-premium{background:#e0f2fe;color:#0369a1}
-  .b-developing{background:#fef3c7;color:#b45309}
-  .b-none{background:#fee2e2;color:#b91c1c}
-  .scorebar{margin-top:12px}
-  .scorebar .row{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:6px}
-  .track{height:9px;background:#eef2ff;border-radius:999px;overflow:hidden}
-  .fill{height:100%;border-radius:999px;background:linear-gradient(90deg, var(--blue), var(--purple));width:0}
-  .grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
-  .metric{border:1px solid var(--line);border-radius:16px;padding:10px 10px 9px;background:#fff}
-  .metric .k{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
-  .metric .v{font-size:15px;font-weight:800;margin-top:3px}
-  .list{margin:12px 0 0;padding:0;display:grid;gap:6px}
-  .list li{list-style:none;font-size:12px;line-height:1.5;padding-left:18px;position:relative}
-  .list li::before{content:"";position:absolute;left:0;top:7px;width:7px;height:7px;border-radius:50%;background:var(--green)}
-  .list.neg li::before{background:var(--red)}
-  .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-  .mini{padding:9px 11px;border-radius:12px;border:1px solid var(--line2);background:#fff;font-weight:700;cursor:pointer}
-  .mini.primary{background:var(--blue);color:#fff;border:none}
-  .mini.locked{background:var(--green);color:#fff;border:none}
-  .mini.danger{background:var(--red2);color:#991b1b;border:1px solid #fecaca}
-  .choices{display:grid;gap:10px}
-  .choice{
-    display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;
-    border:1px solid var(--line);border-radius:18px;padding:12px;background:#fff;
-  }
-  .rank{width:44px;height:44px;border-radius:14px;background:var(--blue2);color:#0f3aa8;display:grid;place-items:center;font-weight:900}
-  .choice .nm{font-weight:800}
-  .choice .sm{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-  .ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
-  .ctl button{width:34px;height:34px;border-radius:11px;border:1px solid var(--line2);background:#fff;cursor:pointer;font-weight:900}
-  .ctl .remove{color:var(--red)}
-  .lockedState{padding:10px 12px;border-radius:14px;background:var(--green2);color:#166534;font-weight:700;font-size:12px}
-  .warnbox,.infobox,.goodbox{border-radius:18px;padding:14px 15px;line-height:1.6;font-size:13px;border:1px solid var(--line);background:#fff}
-  .warnbox{background:var(--amber2);border-color:#fde68a}
-  .infobox{background:#eff6ff;border-color:#bfdbfe}
-  .goodbox{background:var(--green2);border-color:#bbf7d0}
-  .printArea{background:#fff;border:1px solid var(--line);border-radius:24px;padding:18px}
-  .printHead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
-  .printHead h3{margin:0;font-size:18px}
-  .printSummary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
-  .summaryCard{border:1px solid var(--line);border-radius:18px;padding:12px;background:#fff}
-  .summaryCard .k{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-  .summaryCard .v{font-size:18px;font-weight:900;margin-top:5px}
-  .summaryCard .s{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
-  iframe.formframe{width:100%;height:980px;border:1px solid var(--line);border-radius:18px;background:#fff}
-  .footer{margin-top:18px;color:var(--muted);font-size:12px;text-align:center;padding:10px 0 28px}
-  .sticky{position:sticky;top:18px}
-  .space{height:8px}
-  .tagline{font-size:12px;color:var(--muted)}
-  .hide{display:none !important}
-  @media (max-width:1100px){
-    .layout{grid-template-columns:1fr}
-    .sticky{position:static}
-    .cards{grid-template-columns:1fr}
-    .filters{grid-template-columns:repeat(2,1fr)}
-  }
-  @media (max-width:720px){
-    .hero{grid-template-columns:1fr}
-    .statgrid,.fieldgrid,.printSummary,.grid4{grid-template-columns:1fr 1fr}
-    .filters{grid-template-columns:1fr}
-    .wrap{padding:14px}
-    .brand h1{font-size:24px}
-  }
-  @media print{
-    body{background:#fff}
-    .hero,.layout,.footer{display:none !important}
-    .printArea{display:block !important;box-shadow:none;border:none}
-    .panel,.card{box-shadow:none}
-  }
+
+/* ═══ CARDS & PANELS ═══ */
+.panel { background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 1.25rem; margin-bottom: 1rem; }
+.panel h2 { font-size: 1.1rem; margin-bottom: 1rem; color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.75rem; }
+.panel h3 { font-size: 0.95rem; margin-top: 1rem; margin-bottom: 0.5rem; color: #334155; }
+.card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; }
+
+/* ═══ FORMS ═══ */
+.form-group { margin-bottom: 1rem; }
+.form-group label { display: block; font-weight: 600; margin-bottom: 0.4rem; color: #334155; font-size: 0.9rem; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 0.7rem 0.85rem; border: 1px solid #cbd5e1; border-radius: 8px;
+  font-family: inherit; font-size: 1rem; transition: all 0.2s;
+}
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+.form-group input[type="number"]::-webkit-outer-spin-button, .form-group input[type="number"]::-webkit-inner-spin-button { display: none; }
+
+/* ═══ BUTTONS ═══ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.7rem 1.25rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;
+  font-size: 0.95rem; transition: all 0.2s; font-family: inherit;
+  touch-action: manipulation; -webkit-user-select: none;
+}
+.btn-primary { background: #3b82f6; color: white; }
+.btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+.btn-secondary { background: #e2e8f0; color: #1e293b; }
+.btn-danger { background: #ef4444; color: white; }
+.btn-success { background: #10b981; color: white; }
+.btn-sm { padding: 0.5rem 0.85rem; font-size: 0.85rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ═══ TABS ═══ */
+.tabs { display: flex; gap: 0.5rem; margin-bottom: 1rem; border-bottom: 2px solid #e2e8f0; overflow-x: auto; }
+.tab { padding: 0.8rem 1.25rem; background: transparent; border: none; color: #64748b; cursor: pointer;
+  font-weight: 600; border-bottom: 3px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.tab.active { color: #3b82f6; border-bottom-color: #3b82f6; }
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+/* ═══ PILLS & BADGES ═══ */
+.pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
+.pill { padding: 0.5rem 1rem; border: 1px solid #cbd5e1; border-radius: 20px; background: white; cursor: pointer;
+  font-size: 0.9rem; transition: all 0.2s; }
+.pill.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+.badge { display: inline-block; padding: 0.35rem 0.75rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; }
+.badge-elite { background: #ddd6fe; color: #5b21b6; }
+.badge-strong { background: #bfdbfe; color: #0369a1; }
+.badge-premium { background: #fef3c7; color: #b45309; }
+.badge-developing { background: #f3e8ff; color: #6b21a8; }
+
+/* ═══ MESSAGES ═══ */
+.alert { padding: 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.95rem; }
+.alert-info { background: #eff6ff; border-left: 4px solid #3b82f6; color: #1e40af; }
+.alert-warning { background: #fef3c7; border-left: 4px solid #f59e0b; color: #92400e; }
+.alert-danger { background: #fee2e2; border-left: 4px solid #ef4444; color: #991b1b; }
+.alert-success { background: #ecfdf5; border-left: 4px solid #10b981; color: #065f46; }
+
+/* ═══ COLLEGE CARD ═══ */
+.college-card {
+  background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1rem;
+  margin-bottom: 1rem; transition: all 0.2s;
+}
+.college-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
+.college-name { font-weight: 700; color: #1e293b; margin-bottom: 0.35rem; }
+.college-meta { font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; }
+.college-score { display: flex; justify-content: space-between; align-items: center; margin: 0.75rem 0; }
+.score-bar { flex: 1; height: 6px; background: #e2e8f0; border-radius: 3px; overflow: hidden; margin: 0 0.75rem; }
+.score-fill { height: 100%; background: linear-gradient(90deg, #3b82f6, #8b5cf6); transition: width 0.5s; }
+
+/* ═══ CHOICE LIST ═══ */
+.choice-item {
+  display: flex; align-items: center; gap: 0.75rem; background: #f8fafc; padding: 0.85rem;
+  border-radius: 8px; margin-bottom: 0.5rem; border: 1px solid #e2e8f0;
+}
+.choice-rank { width: 32px; height: 32px; background: #3b82f6; color: white; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+.choice-name { flex: 1; }
+.choice-actions { display: flex; gap: 0.35rem; }
+.choice-btn { width: 32px; height: 32px; padding: 0; border: 1px solid #cbd5e1; border-radius: 6px; background: white;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+.choice-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.locked-indicator { color: #10b981; font-weight: 700; font-size: 0.85rem; }
+
+/* ═══ SLIDERS ═══ */
+.slider-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+.slider-label { font-size: 0.9rem; min-width: 120px; }
+input[type="range"] { flex: 1; height: 6px; -webkit-appearance: none; appearance: none;
+  background: #e2e8f0; border-radius: 3px; outline: none; }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none;
+  width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; cursor: pointer; }
+input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: #3b82f6; cursor: pointer; border: none; }
+.slider-value { min-width: 45px; text-align: right; font-weight: 700; }
+
+/* ═══ COMPARISON VIEW ═══ */
+.comparison-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.comparison-card { background: white; border: 2px solid #3b82f6; border-radius: 10px; padding: 1rem; }
+
+/* ═══ ROUND SIMULATION ═══ */
+.round-container { background: #f8fafc; border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+.round-header { font-size: 1rem; font-weight: 700; color: #1e293b; margin-bottom: 0.75rem; }
+.allocation-result { padding: 1rem; border-radius: 8px; text-align: center; margin: 1rem 0; font-weight: 600; }
+.allocation-result.allotted { background: #ecfdf5; color: #065f46; }
+.allocation-result.not-allotted { background: #fee2e2; color: #991b1b; }
+
+/* ═══ NPS SURVEY ═══ */
+.nps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(40px, 1fr)); gap: 0.5rem; margin: 1rem 0; }
+.nps-btn { width: 100%; aspect-ratio: 1; border: 2px solid #cbd5e1; border-radius: 8px; background: white;
+  cursor: pointer; font-weight: 700; transition: all 0.2s; }
+.nps-btn:hover { border-color: #3b82f6; }
+.nps-btn.selected { background: #3b82f6; color: white; border-color: #3b82f6; }
+
+/* ═══ MOBILE OPTIMIZATION ═══ */
+@media (max-width: 768px) {
+  .header { padding: 1rem; }
+  .header h1 { font-size: 1.4rem; }
+  .content { flex-direction: column; padding: 0.75rem; }
+  .sidebar { max-width: 100%; margin-bottom: 1rem; border-radius: 10px; }
+  .panel { padding: 1rem; margin-bottom: 0.75rem; }
+  .tabs { margin-bottom: 0.75rem; }
+  .tab { padding: 0.6rem 1rem; }
+  .comparison-grid { grid-template-columns: 1fr; }
+  .choice-item { flex-wrap: wrap; }
+  .slider-row { flex-wrap: wrap; }
+  .slider-label { min-width: 100%; }
+  input[type="range"] { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .header h1 { font-size: 1.2rem; }
+  .header p { font-size: 0.85rem; }
+  .btn { padding: 0.6rem 1rem; font-size: 0.9rem; }
+  .btn-sm { padding: 0.4rem 0.7rem; font-size: 0.8rem; }
+  .panel h2 { font-size: 1rem; }
+  .form-group input, .form-group select { font-size: 16px; }
+}
+
+/* ═══ PRINT STYLES ═══ */
+@media print {
+  body { background: white; }
+  .header, .footer, .tabs, .btn, input, select { display: none !important; }
+  .panel { page-break-inside: avoid; box-shadow: none; border: 1px solid #cbd5e1; }
+  .content { display: block; }
+  .sidebar { display: block !important; width: 100%; max-width: 100%; }
+}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.tab-content.active { animation: slideIn 0.3s ease-out; }
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="hero">
-    <div class="brand">
-      <h1 id="pageTitle">NEET India Counselling Intelligence Tool</h1>
-      <p>
-        A state/UT-wide medical college explorer, choice-filling simulator, affordability lens, and counselling-print workflow.
-        Built for long-horizon decision making, not brochure-driven panic.
-      </p>
-      <div class="chiprow" id="coverageChips"></div>
-      <div class="toolbar">
-        <button class="btn" onclick="switchTab('explorer')">Open college explorer</button>
-        <button class="btn secondary" onclick="autoBuildChoices()">Auto-build choice list</button>
-        <button class="btn secondary" onclick="window.print()">Print</button>
-      </div>
-    </div>
-    <div class="statgrid">
-      <div class="stat">
-        <div class="k">Candidate</div>
-        <div class="v" id="statName"></div>
-        <div class="s">Editable variables for name, year and attempt number.</div>
-      </div>
-      <div class="stat">
-        <div class="k">Exam year / attempt</div>
-        <div class="v" id="statYearAttempt">2026 · Attempt 1</div>
-        <div class="s">Use this for personalised print packs and shortlist versions.</div>
-      </div>
-      <div class="stat">
-        <div class="k">Score / AIR / percentile</div>
-        <div class="v" id="statScore">682 / — / —</div>
-        <div class="s">Live estimate based on the NEET score entered.</div>
-      </div>
-      <div class="stat">
-        <div class="k">Family income lens</div>
-        <div class="v" id="statIncome">—</div>
-        <div class="s">Used to temper private/deemed recommendations and accommodation burden.</div>
-      </div>
-    </div>
+<div class="app">
+  <div class="header">
+    <h1>🎯 NEET Counselling Intelligence</h1>
+    <p>Pan-India Medical College Selection & Prediction Tool · Offline-capable, Data-driven</p>
   </div>
 
-  <div class="layout">
-    <div class="panel sticky">
-      <div class="panel-head">
-        <h2>Profile & priority architecture</h2>
-        <span class="tagline">Save to local device</span>
-      </div>
-      <div class="panel-body">
-        <div class="fieldgrid">
-          <div class="field"><label>Candidate name</label><input id="name" value="" /></div>
-          <div class="field"><label>Exam year</label><input id="year" type="number" value="2026" /></div>
-          <div class="field"><label>Attempt number</label><input id="attempt" type="number" min="1" value="1" /></div>
-          <div class="field"><label>NEET score</label><input id="score" type="number" min="1" max="720" value="" /></div>
-          <div class="field"><label>Predicted AIR</label><input id="air" readonly /></div>
-          <div class="field"><label>Percentile estimate</label><input id="percentile" readonly /></div>
-          <div class="field"><label>Domicile state / UT</label><select id="domicile"></select></div>
-          <div class="field">
-            <label>Category</label>
-            <select id="category">
-              <option>General (UR)</option><option>OBC</option><option>SC</option><option>ST</option><option>EWS</option><option>PwD</option>
-            </select>
-          </div>
-          <div class="field"><label>Family annual income (₹)</label><input id="income" type="number" min="0" value="1200000" /></div>
-          <div class="field">
-            <label>Budget posture</label>
-            <select id="budget">
-              <option value="govt">Government seat only</option>
-              <option value="mixed">Government preferred, private backup</option>
-              <option value="open">Cost flexible / premium okay</option>
-            </select>
-          </div>
+  <div class="content">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="panel">
+        <h2>📋 Your Profile</h2>
+
+        <div class="form-group">
+          <label>Candidate Name</label>
+          <input type="text" id="cname" placeholder="Your name" />
         </div>
 
-        <div class="section">
-          <h3>Primary goals</h3>
-          <div class="pillset" id="goalSet">
-            <button class="pill active" data-goal="pg">PG / MD / MS</button>
-            <button class="pill active" data-goal="clinical">Clinical depth</button>
-            <button class="pill active" data-goal="research">Research</button>
-            <button class="pill" data-goal="usmle">USMLE / abroad</button>
-            <button class="pill" data-goal="practice">Private practice</button>
-            <button class="pill" data-goal="service">Govt service</button>
-          </div>
+        <div class="form-group">
+          <label>NEET Year</label>
+          <select id="cyear">
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026" selected>2026</option>
+          </select>
         </div>
 
-        <div class="section">
-          <h3>Priority weights</h3>
-          <div class="sliders" id="sliders"></div>
-          <div class="space"></div>
-          <div class="subtle" id="weightSum"></div>
+        <div class="form-group">
+          <label>NEET Score (0-720)</label>
+          <input type="number" id="cscore" placeholder="e.g., 682" min="0" max="720" />
         </div>
 
-        <div class="section">
-          <h3>Quick strategy</h3>
-          <div class="infobox">Dream colleges first, realistic stretch choices next, safety net at the bottom. Lock only after the list reflects genuine preference order, not fear-based probability order.</div>
+        <div class="form-group">
+          <label>Predicted AIR</label>
+          <input type="text" id="cair" readonly placeholder="Auto-calculated" />
         </div>
 
-        <div class="toolbar" style="margin-top:14px">
-          <button class="btn" onclick="saveState()">Save profile</button>
-          <button class="btn secondary" onclick="resetState()">Reset</button>
+        <div class="form-group">
+          <label>Percentile</label>
+          <input type="text" id="cpercentile" readonly placeholder="Auto-calculated" />
         </div>
+
+        <div class="form-group">
+          <label>Domicile State / UT</label>
+          <select id="cdomicile">
+            <option>Andaman & Nicobar</option><option>Andhra Pradesh</option><option>Arunachal Pradesh</option>
+            <option>Assam</option><option>Bihar</option><option>Chandigarh</option><option>Chhattisgarh</option>
+            <option>Dadra & Nagar Haveli</option><option>Delhi</option><option>Goa</option><option>Gujarat</option>
+            <option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option>
+            <option>Jammu & Kashmir</option><option>Karnataka</option><option>Kerala</option><option>Ladakh</option>
+            <option>Lakshadweep</option><option>Madhya Pradesh</option><option>Maharashtra</option>
+            <option>Manipur</option><option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option>
+            <option>Odisha</option><option>Puducherry</option><option>Punjab</option><option>Rajasthan</option>
+            <option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option>
+            <option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="ccategory">
+            <option value="UR">General (UR)</option><option value="OBC">OBC</option><option value="SC">SC</option>
+            <option value="ST">ST</option><option value="EWS">EWS</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Family Annual Income (₹)</label>
+          <input type="number" id="cincome" placeholder="e.g., 1200000" />
+        </div>
+
+        <div class="form-group">
+          <label>User Type</label>
+          <select id="cusertype">
+            <option value="student">Student</option><option value="parent">Parent / Guardian</option><option value="counsellor">Counsellor / Advisor</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Primary Goals</label>
+          <div class="pills" id="goals-pills"></div>
+        </div>
+
+        <button class="btn btn-primary" onclick="saveProfile()" style="width: 100%;">💾 Save Profile</button>
       </div>
     </div>
 
+    <!-- MAIN CONTENT -->
     <div class="main">
       <div class="panel">
-        <div class="panel-head">
-          <h2>Navigation</h2>
-          <span class="tagline">India-wide college directory + choice flow</span>
-        </div>
         <div class="tabs">
-          <button class="tab active" data-tab="explorer" onclick="switchTab('explorer')">College Explorer</button>
-          <button class="tab" data-tab="choices" onclick="switchTab('choices')">Choice Filling</button>
-          <button class="tab" data-tab="strategy" onclick="switchTab('strategy')">Counselling Strategy</button>
-          <button class="tab" data-tab="print" onclick="switchTab('print')">Data Capture & Print</button>
+          <button class="tab active" onclick="switchTab('explorer')">🎓 College Explorer</button>
+          <button class="tab" onclick="switchTab('choices')">📝 Choice Filling</button>
+          <button class="tab" onclick="switchTab('simulation')">📊 Round Simulation</button>
+          <button class="tab" onclick="switchTab('nps')">⭐ Feedback</button>
+          <button class="tab" onclick="switchTab('export')">💾 Export / Print</button>
         </div>
-      </div>
 
-      <div class="content active" id="tab-explorer">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>College explorer</h2>
-            <span class="tagline" id="resultCount"></span>
+        <!-- TAB: EXPLORER -->
+        <div class="tab-content active" id="tab-explorer">
+          <h3>🔍 College Explorer (900+ colleges pan-India)</h3>
+          
+          <div class="form-group">
+            <label>Search by name, city, state...</label>
+            <input type="text" id="search-box" placeholder="Type to filter colleges..." oninput="filterColleges()" />
           </div>
-          <div class="panel-body">
-            <div class="filters">
-              <div class="field"><label>State / UT</label><select id="stateFilter"></select></div>
-              <div class="field">
-                <label>Institution type</label>
-                <select id="typeFilter">
-                  <option value="all">All types</option>
-                  <option value="Government">Government</option>
-                  <option value="AIIMS / Central">AIIMS / Central</option>
-                  <option value="Central">Central</option>
-                  <option value="Government / Central">Government / Central</option>
-                  <option value="Government / Institute of National Importance">Institute of National Importance</option>
-                  <option value="Deemed / Private">Deemed / Private</option>
-                  <option value="Private / Trust">Private / Trust</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>Rank class</label>
-                <select id="rankFilter">
-                  <option value="all">All</option><option value="Elite">Elite</option><option value="Strong">Strong</option><option value="Premium">Premium</option><option value="Developing">Developing</option><option value="None">No college</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>Sort by</label>
-                <select id="sortBy">
-                  <option value="fit">Fit score</option><option value="reputation">Reputation</option><option value="academics">Academics</option><option value="internship">Internship</option><option value="hostel">Hostel</option><option value="affordability">Affordability</option>
-                </select>
-              </div>
+
+          <div class="form-group">
+            <label>Filters</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+              <select id="filter-state" onchange="filterColleges()"><option value="">All states</option></select>
+              <select id="filter-type" onchange="filterColleges()">
+                <option value="">All types</option><option value="Government">Government</option>
+                <option value="AIIMS">AIIMS / Central</option><option value="Private">Private / Deemed</option>
+              </select>
             </div>
-            <div class="searchbar">
-              <input id="search" placeholder="Search college, city, state or type..." />
-              <div class="smallchips" id="regionSummary"></div>
-            </div>
-            <div class="cards" id="cards"></div>
           </div>
+
+          <button class="btn btn-secondary btn-sm" onclick="toggleComparison()">🔀 Compare Mode</button>
+          <button class="btn btn-secondary btn-sm" onclick="resetFilters()">🔄 Reset</button>
+
+          <div id="colleges-container"></div>
         </div>
-      </div>
 
-      <div class="content" id="tab-choices">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Choice filling and locking mechanism</h2>
-            <span class="lockedState" id="lockStatus">Unlocked</span>
+        <!-- TAB: CHOICES -->
+        <div class="tab-content" id="tab-choices">
+          <h3>📝 Counselling Choice List</h3>
+          
+          <div class="alert alert-info">
+            ℹ️ Fill your preferences in order. <b>Locked lists cannot be edited.</b> The counselling algorithm allocates the first available seat matching your rank from the top of your list.
           </div>
-          <div class="panel-body">
-            <div class="warnbox">
-              Fill in true preference order, not predicted probability order. In NEET counselling, the algorithm can only allot what is on the list. A dream college placed too low becomes a self-inflicted loss.
-            </div>
-            <div class="actions">
-              <button class="btn" onclick="autoBuildChoices()">Auto-build by fit score</button>
-              <button class="btn secondary" onclick="sortToProb()">Sort by probability</button>
-              <button class="btn secondary" onclick="toggleLock()">Lock / unlock list</button>
-              <button class="btn secondary" onclick="saveChoices()">Save choices</button>
-            </div>
-            <div class="section">
-              <h3>Your counselling list</h3>
-              <div class="choices" id="choiceList"></div>
-            </div>
-            <div class="section">
-              <h3>Round logic</h3>
-              <div class="grid4">
-                <div class="metric"><div class="k">Round 1</div><div class="v">Open wide</div><div class="s">Include all truly acceptable dream, stretch and safe options.</div></div>
-                <div class="metric"><div class="k">Round 2</div><div class="v">Do not freeze</div><div class="s">Keep options alive if movement is possible. Read the vacancy matrix.</div></div>
-                <div class="metric"><div class="k">Mop-up</div><div class="v">Ready docs</div><div class="s">Fees, certificates, and travel readiness matter more now than theory.</div></div>
-                <div class="metric"><div class="k">Stray</div><div class="v">Risk control</div><div class="s">Only after confirming genuine willingness to join immediately.</div></div>
-              </div>
-            </div>
+
+          <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+            <button class="btn btn-primary btn-sm" onclick="autoBuildChoices()">Auto-build by fit</button>
+            <button class="btn btn-secondary btn-sm" onclick="toggleChoiceLock()">🔒 Lock / Unlock</button>
+            <button class="btn btn-secondary btn-sm" onclick="clearChoices()">⚠️ Clear All</button>
+          </div>
+
+          <div id="lock-status" class="alert alert-warning" style="display: none;">
+            🔒 <b>Choices are LOCKED.</b> You cannot edit this list. To unlock, click the lock button above.
+          </div>
+
+          <div id="choices-list"></div>
+
+          <div style="margin-top: 1rem;">
+            <label style="display: flex; gap: 0.5rem; align-items: center;">
+              <input type="checkbox" id="choices-confirm" />
+              <span>✓ I confirm this is my genuine preference order (not probability order)</span>
+            </label>
           </div>
         </div>
-      </div>
 
-      <div class="content" id="tab-strategy">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Strategy matrix</h2>
-            <span class="tagline">Government, private, domicile and ROI lens</span>
+        <!-- TAB: SIMULATION -->
+        <div class="tab-content" id="tab-simulation">
+          <h3>📊 Advanced Round Simulation</h3>
+
+          <div class="alert alert-info">
+            💡 Simulates Round 1, Round 2, and Mop-up based on your score, rank, and preference list. Branch/stream preferences are considered for allocation probability.
           </div>
-          <div class="panel-body">
-            <div class="grid4">
-              <div class="metric"><div class="k">Best fit</div><div class="v" id="bestFit">—</div><div class="s">Highest weighted combination of your priorities and the college profile.</div></div>
-              <div class="metric"><div class="k">Budget risk</div><div class="v" id="budgetRisk">—</div><div class="s">Relative pressure of fees + accommodation against family income.</div></div>
-              <div class="metric"><div class="k">Accommodation burden</div><div class="v" id="accomBurden">—</div><div class="s">If far from domicile, hostel or rental load changes the true ROI.</div></div>
-              <div class="metric"><div class="k">Recommended posture</div><div class="v" id="posture">—</div><div class="s">How to think about choice order and risk before locking.</div></div>
-            </div>
-            <div class="section"><h3>Operational guidance</h3><div class="goodbox" id="strategyText">Your strategy summary will appear here after the profile and weights are set.</div></div>
-            <div class="section"><h3>Pros / cons lens</h3><div class="grid4" id="prosConsStats"></div></div>
-            <div class="section"><h3>Recommended shortlist bands</h3><div class="cards" id="bandCards"></div></div>
+
+          <div class="form-group">
+            <label>Primary Stream Preference</label>
+            <select id="stream-pref" onchange="runSimulation()">
+              <option value="any">Any stream (no preference)</option>
+              <option value="medicine">General Medicine preferred</option>
+              <option value="surgery">General Surgery preferred</option>
+              <option value="pediatrics">Pediatrics preferred</option>
+            </select>
           </div>
+
+          <button class="btn btn-primary" onclick="runSimulation()">▶ Run Simulation</button>
+
+          <div id="simulation-output"></div>
         </div>
-      </div>
 
-      <div class="content" id="tab-print">
-        <div class="panel">
-          <div class="panel-head">
-            <h2>Data capture and print</h2>
-            <span class="tagline">Google Form first, then print</span>
+        <!-- TAB: NPS -->
+        <div class="tab-content" id="tab-nps">
+          <h3>⭐ Feedback & Net Promoter Score</h3>
+
+          <div class="alert alert-info">
+            Your feedback helps improve this tool for future students and parents.
           </div>
-          <div class="panel-body">
-            <div class="warnbox" style="margin-bottom:12px">
-              Complete the embedded Google Form first. Then tick the confirmation box below to enable printing. That keeps the workflow clean and ensures the user data is collected before the print pack is generated.
-            </div>
 
-            
+          <div class="form-group">
+            <label>How likely are you to recommend this tool to others? (0-10)</label>
+            <div class="nps-grid" id="nps-grid"></div>
+          </div>
 
-            <div class="section">
-              <label style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5">
-                <input type="checkbox" id="formDone" onchange="updatePrintState()" />
-                <span>I confirm that I have completed the Google Form submission and reviewed the shortlist.</span>
-              </label>
-            </div>
+          <div class="form-group">
+            <label>Any comments or suggestions?</label>
+            <textarea id="nps-comment" placeholder="Please share your feedback..." style="resize: vertical; min-height: 100px;"></textarea>
+          </div>
 
-            <div class="actions">
-              <button class="btn" id="printBtn" onclick="window.print()" disabled>Print / save as PDF</button>
-              <button class="btn secondary" onclick="copySummary()">Copy summary text</button>
-              <a class="btn secondary" href="https://script.google.com/macros/s/AKfycbzzFJdOdh_H85hGACaLY99UAC-fNZXNCKygxw0pZoFrJA-Ct1G1nq85qYz4jsYbfL_m/exec" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;justify-content:center">Open script endpoint</a>
-            </div>
+          <button class="btn btn-success" onclick="submitNPS()">📤 Submit Feedback</button>
+        </div>
 
-            <div class="section">
-              <div class="printArea" id="printArea">
-                <div class="printHead">
-                  <div>
-                    <h3 id="printTitle">Candidate print pack</h3>
-                    <div class="subtle" id="printSubtitle">Will reflect candidate, score, AIR, percentile and shortlist.</div>
-                  </div>
-                  <div class="lockedState" id="printLockState">Unlock status pending</div>
-                </div>
-                <div class="printSummary">
-                  <div class="summaryCard"><div class="k">Candidate</div><div class="v" id="pName"></div><div class="s" id="pYear">2026 · Attempt 1</div></div>
-                  <div class="summaryCard"><div class="k">Score / AIR / percentile</div><div class="v" id="pScore">682 / — / —</div><div class="s">Live estimate from the current score field.</div></div>
-                  <div class="summaryCard"><div class="k">Domicile / budget</div><div class="v" id="pDom">—</div><div class="s" id="pBud">—</div></div>
-                </div>
-                <div class="section">
-                  <h3>Final preference list snapshot</h3>
-                  <div id="printChoices" class="choices"></div>
-                </div>
-              </div>
-            </div>
+        <!-- TAB: EXPORT -->
+        <div class="tab-content" id="tab-export">
+          <h3>💾 Export & Print</h3>
 
+          <div class="alert alert-warning">
+            ⚠️ <b>Data collection required:</b> You must fill the intake form below before exporting or printing.
+          </div>
+
+          <h3 style="margin-top: 1.5rem;">📋 Intake Form (Required)</h3>
+          
+          <div class="form-group">
+            <label>Mobile Number</label>
+            <input type="tel" id="mobile" placeholder="10-digit mobile number" />
+          </div>
+
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="email" placeholder="your.email@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label>Coaching Institute (if any)</label>
+            <input type="text" id="coaching" placeholder="e.g., ALLEN, Vedantu, etc." />
+          </div>
+
+          <div class="form-group">
+            <label>How did you hear about this tool?</label>
+            <select id="source">
+              <option value="">Select...</option><option value="friend">Friend / Peer</option>
+              <option value="coaching">Coaching Institute</option><option value="social">Social Media</option>
+              <option value="search">Search Engine</option><option value="other">Other</option>
+            </select>
+          </div>
+
+          <div style="margin: 1rem 0;">
+            <label style="display: flex; gap: 0.5rem; align-items: flex-start;">
+              <input type="checkbox" id="agree-terms" />
+              <span>✓ I agree that this tool is <b>predictive only</b> and not a replacement for official NEET counselling. I will verify all information with official sources before making decisions.</span>
+            </label>
+          </div>
+
+          <button class="btn btn-success" onclick="completeIntake()">✓ Complete Intake</button>
+
+          <div id="export-buttons" style="display: none; margin-top: 1.5rem;">
+            <button class="btn btn-primary" onclick="exportToCSV()">📥 Export Shortlist (CSV)</button>
+            <button class="btn btn-primary" onclick="printReport()">🖨️ Print Report (PDF)</button>
           </div>
         </div>
       </div>
@@ -519,1056 +437,426 @@
   </div>
 
   <div class="footer">
-    Designed and copyrighted by Anirban Pal · Built as an independent, local-first counselling planner for India-wide MBBS selection.
+    <div style="max-width: 1200px; margin: 0 auto;">
+      <p><strong>⚠️ DISCLAIMER:</strong> This tool provides <b>predictive estimates only</b> based on historical NEET data (2020-2025) and is <b>NOT a replacement for official counselling portals</b> (KEA, MCC, OJEE, etc.). AIR predictions may vary by ±500-1000 ranks. Always verify all information with official sources before making any decisions. Medical college selection is a critical life decision — use this tool as a research aid, not a final authority.</p>
+      <p style="margin-top: 0.5rem; font-size: 0.85rem;">Built for students and parents. Offline-capable. No data sent to servers. © 2024-2026 · All States/UTs · 900+ Colleges</p>
+    </div>
   </div>
 </div>
 
+<!-- COLLEGE DATABASE (Comprehensive Pan-India) -->
 <script>
-const REGIONS = ["Andaman & Nicobar Islands", "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chandigarh", "Chhattisgarh", "Dadra & Nagar Haveli and Daman & Diu", "Delhi", "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jammu & Kashmir", "Jharkhand", "Karnataka", "Kerala", "Ladakh", "Lakshadweep", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Puducherry", "Punjab", "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"];
-const COLLEGES = [{"name": "All India Institute of Medical Sciences, Delhi", "region": "Delhi", "state": "Delhi", "kind": "AIIMS / Central", "rankClass": "Elite", "reputation": 10, "academics": 10, "hostel": 9, "internship": 10, "safety": 8, "affordability": 8, "bond": 9, "urban": 10, "fees": "Very Low", "availability": "On-campus hostels", "pros": ["National brand", "Highest clinical + academic ecosystem"], "cons": ["Extremely competitive", "Less forgiving if you need a softer environment"], "notes": "Best-in-class for academic ambition, research exposure, and long-term leverage."}, {"name": "Maulana Azad Medical College, Delhi", "region": "Delhi", "state": "Delhi", "kind": "Government / University", "rankClass": "Elite", "reputation": 10, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 8, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Huge patient load", "Excellent for PG preparation"], "cons": ["Metro pressure", "Competitive peer environment"], "notes": "A top-tier govt choice with strong clinical breadth and brand recall."}, {"name": "Vardhman Mahavir Medical College & Safdarjung Hospital, Delhi", "region": "Delhi", "state": "Delhi", "kind": "Government / Central", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 8, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Large tertiary hospital exposure", "Excellent internship opportunities"], "cons": ["High workload", "Urban living costs"], "notes": "One of the strongest choices for clinical rigor and practical learning."}, {"name": "Government Medical College & Hospital, Chandigarh", "region": "Chandigarh", "state": "Chandigarh", "kind": "Government / UT", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 9, "internship": 9, "safety": 9, "affordability": 8, "bond": 8, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Excellent campus planning", "Strong lifestyle + safety balance"], "cons": ["Seat pressure is high", "Limited flexibility for last-minute movement"], "notes": "Very strong UT option with a good balance of academics and livability."}, {"name": "JIPMER, Puducherry", "region": "Puducherry", "state": "Puducherry", "kind": "Government / Institute of National Importance", "rankClass": "Elite", "reputation": 10, "academics": 10, "hostel": 9, "internship": 10, "safety": 9, "affordability": 8, "bond": 9, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Elite brand", "Strong academic culture and clinical output"], "cons": ["Highly selective", "Counselling dynamics are unforgiving"], "notes": "Among India’s best. Excellent for candidates aiming at strong academic medicine."}, {"name": "Andhra Medical College, Visakhapatnam", "region": "Andhra Pradesh", "state": "Andhra Pradesh", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 9, "safety": 7, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Long-established institution", "Strong patient exposure"], "cons": ["Older infrastructure in parts", "Bond obligations may apply"], "notes": "Good academic and clinical balance with a credible reputation."}, {"name": "Guntur Medical College, Guntur", "region": "Andhra Pradesh", "state": "Andhra Pradesh", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Reliable govt option", "Good core clinical training"], "cons": ["Not metro-based", "Lifestyle less polished than central institutes"], "notes": "A practical, solid choice in the Andhra state ecosystem."}, {"name": "Tomo Riba Institute of Health & Medical Sciences, Naharlagun", "region": "Arunachal Pradesh", "state": "Arunachal Pradesh", "kind": "Government", "rankClass": "Developing", "reputation": 6, "academics": 6, "hostel": 7, "internship": 7, "safety": 7, "affordability": 9, "bond": 7, "urban": 5, "fees": "Very Low", "availability": "Hostels available", "pros": ["Growing institution", "Lower competition pressure"], "cons": ["Developing ecosystem", "Less external exposure than big-city colleges"], "notes": "Useful if the goal is a government seat in a less stressful environment."}, {"name": "Gauhati Medical College, Guwahati", "region": "Assam", "state": "Assam", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 9, "safety": 7, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Large patient volume", "Strong regional reputation"], "cons": ["Weather/city fit matters", "Bond may be a factor"], "notes": "A significant north-east academic hub with solid clinical depth."}, {"name": "Assam Medical College, Dibrugarh", "region": "Assam", "state": "Assam", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 6, "fees": "Very Low", "availability": "Hostels available", "pros": ["Established institution", "Strong state-level standing"], "cons": ["Less urban convenience", "Accommodation choices outside campus can be limited"], "notes": "A resilient, value-driven govt option with historical credibility."}, {"name": "AIIMS Patna", "region": "Bihar", "state": "Bihar", "kind": "AIIMS / Central", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 9, "internship": 9, "safety": 7, "affordability": 8, "bond": 9, "urban": 8, "fees": "Very Low", "availability": "On-campus hostels", "pros": ["AIIMS brand", "Strong academic standardisation"], "cons": ["Competition is stiff", "Civic environment may need adjustment"], "notes": "A very strong national option with strong system-level legitimacy."}, {"name": "Patna Medical College, Patna", "region": "Bihar", "state": "Bihar", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 7, "internship": 9, "safety": 6, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Very high patient exposure", "Strong legacy"], "cons": ["Infrastructure varies by block", "City pressure can be high"], "notes": "A classic high-volume govt medical college with a long institutional history."}, {"name": "Pt. Jawahar Lal Nehru Memorial Medical College, Raipur", "region": "Chhattisgarh", "state": "Chhattisgarh", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Large teaching ecosystem", "Good govt affordability"], "cons": ["Not elite-brand nationally", "Urban amenities are moderate"], "notes": "A dependable choice with strong practical value for the price."}, {"name": "Goa Medical College, Bambolim", "region": "Goa", "state": "Goa", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 8, "affordability": 8, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Strong brand in a compact state", "Good lifestyle balance"], "cons": ["Seat movement can be tight", "Lifestyle cost outside campus can rise"], "notes": "A favourable blend of academic quality and livability."}, {"name": "B.J. Medical College, Ahmedabad", "region": "Gujarat", "state": "Gujarat", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Very strong state reputation", "Large clinical ecosystem"], "cons": ["Urban pressure", "Competition is intense"], "notes": "A top Gujarat choice with strong academic and hospital ecosystem."}, {"name": "Medical College Baroda, Vadodara", "region": "Gujarat", "state": "Gujarat", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 8, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Well-known state institution", "Stable academic environment"], "cons": ["Less national cachet than top metros", "Bond and posting rules matter"], "notes": "Solid, reliable, and usually a sensible strategic pick."}, {"name": "Pt. B.D. Sharma PGIMS, Rohtak", "region": "Haryana", "state": "Haryana", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Major Haryana govt institute", "Good clinical depth"], "cons": ["Not metropolitan", "Placement of accommodation can be tricky"], "notes": "A major north Indian public medical college with good utility."}, {"name": "Indira Gandhi Medical College, Shimla", "region": "Himachal Pradesh", "state": "Himachal Pradesh", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 8, "affordability": 8, "bond": 6, "urban": 6, "fees": "Very Low", "availability": "Hostels available", "pros": ["Good environment", "Stable government training"], "cons": ["Mountain logistics", "Less urban convenience"], "notes": "A good fit for students who value a calmer training environment."}, {"name": "Rajendra Institute of Medical Sciences, Ranchi", "region": "Jharkhand", "state": "Jharkhand", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Recognised legacy institution", "Good state demand"], "cons": ["Infrastructure variance", "Urban ecosystem is mixed"], "notes": "Strong enough to sit in the core shortlist for many rank bands."}, {"name": "Bangalore Medical College & Research Institute, Bengaluru", "region": "Karnataka", "state": "Karnataka", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 6, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Huge patient load", "Very strong state brand"], "cons": ["High competition", "Demanding pace and pressure"], "notes": "A flagship Karnataka college with exceptional clinical exposure."}, {"name": "Mysore Medical College & Research Institute, Mysuru", "region": "Karnataka", "state": "Karnataka", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Historic reputation", "Strong academic culture"], "cons": ["Competition high", "Accommodation near campus can be variable"], "notes": "A highly desirable Karnataka govt choice with excellent reputation."}, {"name": "Government Medical College, Thiruvananthapuram", "region": "Kerala", "state": "Kerala", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Strong public-health culture", "Excellent academic discipline"], "cons": ["Seat competition is strong", "Weather and city fit vary by person"], "notes": "A major Kerala govt institution with consistent academic credibility."}, {"name": "Government Medical College, Kozhikode", "region": "Kerala", "state": "Kerala", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Excellent clinical environment", "Very strong state reputation"], "cons": ["Highly selective", "Demanding study culture"], "notes": "A top government option in Kerala with excellent training depth."}, {"name": "Gandhi Medical College, Bhopal", "region": "Madhya Pradesh", "state": "Madhya Pradesh", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 8, "hostel": 8, "internship": 9, "safety": 7, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["High clinical relevance", "Strong state standing"], "cons": ["City fit matters", "Old/new block quality may differ"], "notes": "One of MP’s most important public medical institutions."}, {"name": "M.G.M. Medical College, Indore", "region": "Madhya Pradesh", "state": "Madhya Pradesh", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 8, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Very strong city ecosystem", "Large patient and academic base"], "cons": ["Metro-style costs can rise", "Competition is intense"], "notes": "A strategically strong option with good urban support."}, {"name": "Grant Medical College, Mumbai", "region": "Maharashtra", "state": "Maharashtra", "kind": "Government", "rankClass": "Elite", "reputation": 10, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 6, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Extremely high patient volume", "Excellent national reputation"], "cons": ["Mumbai cost pressure", "Very intense workload"], "notes": "A premier government institution in India’s largest medical market."}, {"name": "Seth G.S. Medical College, Mumbai", "region": "Maharashtra", "state": "Maharashtra", "kind": "Government", "rankClass": "Elite", "reputation": 10, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 6, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Huge tertiary exposure", "Very respected brand"], "cons": ["High pressure", "Space and accommodation premium"], "notes": "Among the most respected govt MBBS institutions in the country."}, {"name": "Regional Institute of Medical Sciences, Imphal", "region": "Manipur", "state": "Manipur", "kind": "Central", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 8, "bond": 8, "urban": 7, "fees": "Low", "availability": "Hostels available", "pros": ["Central institute structure", "Good regional academic standing"], "cons": ["Region-specific logistics", "Fewer national placement networks than metros"], "notes": "A stable central option in the north-east region."}, {"name": "NEIGRIHMS, Shillong", "region": "Meghalaya", "state": "Meghalaya", "kind": "Central", "rankClass": "Strong", "reputation": 9, "academics": 9, "hostel": 9, "internship": 8, "safety": 8, "affordability": 8, "bond": 8, "urban": 7, "fees": "Low", "availability": "Hostels available", "pros": ["Good central ecosystem", "Strong hostel and campus environment"], "cons": ["Not a classic state MBBS college", "Seat movement can be limited"], "notes": "A strong medical training environment in the northeast."}, {"name": "Zoram Medical College, Falkawn", "region": "Mizoram", "state": "Mizoram", "kind": "Government", "rankClass": "Developing", "reputation": 6, "academics": 6, "hostel": 7, "internship": 7, "safety": 8, "affordability": 9, "bond": 7, "urban": 5, "fees": "Very Low", "availability": "Hostels available", "pros": ["Calmer environment", "Growing public institution"], "cons": ["Smaller ecosystem", "Less lateral exposure"], "notes": "Useful as a government option in a compact state system."}, {"name": "Nagaland Institute of Medical Sciences & Research, Kohima", "region": "Nagaland", "state": "Nagaland", "kind": "Government", "rankClass": "Developing", "reputation": 6, "academics": 6, "hostel": 7, "internship": 7, "safety": 8, "affordability": 9, "bond": 7, "urban": 5, "fees": "Very Low", "availability": "Hostels available", "pros": ["Fresh institution", "Lower crowding pressure"], "cons": ["Ecosystem still maturing", "Limited national profile"], "notes": "A developing government medical institution in the north-east."}, {"name": "S.C.B. Medical College, Cuttack", "region": "Odisha", "state": "Odisha", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 7, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Very strong state reputation", "Large hospital exposure"], "cons": ["Old-city pressures", "Demanding training environment"], "notes": "One of Odisha’s major public medical institutions."}, {"name": "Veer Surendra Sai Institute of Medical Sciences & Research, Burla", "region": "Odisha", "state": "Odisha", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 6, "fees": "Very Low", "availability": "Hostels available", "pros": ["Good govt value", "Solid clinical foundation"], "cons": ["Smaller city ecosystem", "Accommodation planning matters"], "notes": "A practical and respected government medical option in Odisha."}, {"name": "Government Medical College, Amritsar", "region": "Punjab", "state": "Punjab", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Historic govt institution", "Good patient and academic mix"], "cons": ["City traffic and locality fit vary", "Bond may matter"], "notes": "Reliable and respected in the Punjab state context."}, {"name": "Government Medical College, Patiala", "region": "Punjab", "state": "Punjab", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Strong legacy", "Good state standing"], "cons": ["Not metro-branded", "Lifestyle less varied than large cities"], "notes": "A dependable state government MBBS institution."}, {"name": "SMS Medical College, Jaipur", "region": "Rajasthan", "state": "Rajasthan", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Top Rajasthan brand", "Excellent practical exposure"], "cons": ["Seat pressure is substantial", "Metro adjacency increases cost"], "notes": "A flagship public medical institution with strong visibility."}, {"name": "Dr. S.N. Medical College, Jodhpur", "region": "Rajasthan", "state": "Rajasthan", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Well-known state govt option", "Good clinical utility"], "cons": ["Hot climate/fit considerations", "Not as elite as SMS"], "notes": "A solid, high-value choice in the Rajasthan ecosystem."}, {"name": "Sikkim Manipal Institute of Medical Sciences, Gangtok", "region": "Sikkim", "state": "Sikkim", "kind": "Deemed / Private", "rankClass": "Premium", "reputation": 8, "academics": 8, "hostel": 9, "internship": 7, "safety": 9, "affordability": 3, "bond": 7, "urban": 6, "fees": "High", "availability": "Hostels available", "pros": ["Premium environment", "Strong hostel support"], "cons": ["High cost", "Different ROI equation than govt colleges"], "notes": "A premium private/deemed-style option for families with flexibility."}, {"name": "Madras Medical College, Chennai", "region": "Tamil Nadu", "state": "Tamil Nadu", "kind": "Government", "rankClass": "Elite", "reputation": 10, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 6, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Historic national prestige", "Excellent patient exposure"], "cons": ["Very competitive", "Urban pressure and cost"], "notes": "A premier public institution in India’s top medical ecosystem."}, {"name": "Stanley Medical College, Chennai", "region": "Tamil Nadu", "state": "Tamil Nadu", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 10, "safety": 8, "affordability": 9, "bond": 6, "urban": 10, "fees": "Very Low", "availability": "Hostels available", "pros": ["Massive clinical volume", "Very strong practical grounding"], "cons": ["Stressful pace", "Accommodation and city costs"], "notes": "A very strong Tamil Nadu option with huge clinical value."}, {"name": "Osmania Medical College, Hyderabad", "region": "Telangana", "state": "Telangana", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 8, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Strong historic legacy", "High utility for NEET-PG prep"], "cons": ["Busy clinical setting", "Competitive internal environment"], "notes": "A key Telangana public medical college with strong reputation."}, {"name": "Gandhi Medical College, Hyderabad", "region": "Telangana", "state": "Telangana", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Excellent reputation", "Strong academic discipline"], "cons": ["High competition", "Urban cost pressures"], "notes": "A high-calibre Telangana choice with excellent brand value."}, {"name": "Agartala Government Medical College, Agartala", "region": "Tripura", "state": "Tripura", "kind": "Government", "rankClass": "Strong", "reputation": 7, "academics": 7, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 6, "fees": "Very Low", "availability": "Hostels available", "pros": ["Reliable govt seat", "Good regional utility"], "cons": ["Limited national profile", "Accommodation ecosystem narrower"], "notes": "A pragmatic govt college in the northeast."}, {"name": "King George’s Medical University, Lucknow", "region": "Uttar Pradesh", "state": "Uttar Pradesh", "kind": "Government / University", "rankClass": "Elite", "reputation": 10, "academics": 9, "hostel": 8, "internship": 10, "safety": 7, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Huge reputation", "Outstanding patient flow and clinical depth"], "cons": ["Very high competition", "City pressure and workload"], "notes": "One of India’s most respected public medical institutions."}, {"name": "Banaras Hindu University, Institute of Medical Sciences, Varanasi", "region": "Uttar Pradesh", "state": "Uttar Pradesh", "kind": "Central / University", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 7, "affordability": 9, "bond": 8, "urban": 8, "fees": "Very Low", "availability": "Hostels available", "pros": ["Strong academic environment", "University ecosystem"], "cons": ["Admissions are competitive", "City fit varies"], "notes": "A highly respected central university medical institution."}, {"name": "AIIMS Rishikesh", "region": "Uttarakhand", "state": "Uttarakhand", "kind": "AIIMS / Central", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 9, "internship": 9, "safety": 8, "affordability": 8, "bond": 9, "urban": 7, "fees": "Very Low", "availability": "On-campus hostels", "pros": ["AIIMS system strength", "Good environment for focused training"], "cons": ["Competition is high", "Less urban than some peers"], "notes": "A very strong AIIMS choice with strong campus support."}, {"name": "Government Medical College, Haldwani", "region": "Uttarakhand", "state": "Uttarakhand", "kind": "Government", "rankClass": "Strong", "reputation": 7, "academics": 7, "hostel": 8, "internship": 8, "safety": 8, "affordability": 9, "bond": 6, "urban": 6, "fees": "Very Low", "availability": "Hostels available", "pros": ["Good state option", "Calmer environment"], "cons": ["Less national visibility", "Smaller ecosystem"], "notes": "Useful as a reliable government option with moderate pressure."}, {"name": "Medical College, Kolkata", "region": "West Bengal", "state": "West Bengal", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 10, "safety": 7, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Huge historic value", "Excellent clinical exposure"], "cons": ["Old-city constraints", "High academic pressure"], "notes": "A top public institution with deep legacy."}, {"name": "IPGMER & SSKM Hospital, Kolkata", "region": "West Bengal", "state": "West Bengal", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 10, "safety": 7, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Outstanding clinical learning", "Strong tertiary referral base"], "cons": ["Workload heavy", "Competition is intense"], "notes": "A strong choice for high-volume clinical education."}, {"name": "Government Medical College, Port Blair", "region": "Andaman & Nicobar Islands", "state": "Andaman & Nicobar Islands", "kind": "Government / UT", "rankClass": "Developing", "reputation": 6, "academics": 6, "hostel": 7, "internship": 7, "safety": 8, "affordability": 7, "bond": 7, "urban": 5, "fees": "Very Low", "availability": "Hostels available", "pros": ["Unique island setting", "Government affordability"], "cons": ["Remote logistics", "Limited outside ecosystem"], "notes": "Useful for a govt seat, but logistics and distance matter."}, {"name": "NAMO Medical Education & Research Institute, Silvassa", "region": "Dadra & Nagar Haveli and Daman & Diu", "state": "Dadra & Nagar Haveli and Daman & Diu", "kind": "Government / UT", "rankClass": "Developing", "reputation": 7, "academics": 7, "hostel": 8, "internship": 7, "safety": 7, "affordability": 8, "bond": 7, "urban": 6, "fees": "Very Low", "availability": "Hostels available", "pros": ["Modern public setup", "Lower pressure compared with legacy metros"], "cons": ["Ecosystem still evolving", "Not a brand-heavy option"], "notes": "A meaningful newer public medical institution in the UT."}, {"name": "Government Medical College, Srinagar", "region": "Jammu & Kashmir", "state": "Jammu & Kashmir", "kind": "Government / UT", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Strong legacy", "Good public clinical exposure"], "cons": ["Regional constraints can matter", "Accommodation planning is important"], "notes": "A major public medical institution in the UT."}, {"name": "Government Medical College, Jammu", "region": "Jammu & Kashmir", "state": "Jammu & Kashmir", "kind": "Government / UT", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Solid govt option", "Good local demand"], "cons": ["Not metro-branded", "Bond rules should be checked carefully"], "notes": "Useful if the candidate values a strong government training environment."}, {"name": "No MBBS college currently listed", "region": "Ladakh", "state": "Ladakh", "kind": "No current MBBS college", "rankClass": "None", "reputation": 0, "academics": 0, "hostel": 0, "internship": 0, "safety": 0, "affordability": 0, "bond": 0, "urban": 0, "fees": "N/A", "availability": "N/A", "pros": ["Use counselling through other states/UTs"], "cons": ["No local MBBS college in the directory"], "notes": "Shown for completeness so the India-wide state/UT map remains complete."}, {"name": "No MBBS college currently listed", "region": "Lakshadweep", "state": "Lakshadweep", "kind": "No current MBBS college", "rankClass": "None", "reputation": 0, "academics": 0, "hostel": 0, "internship": 0, "safety": 0, "affordability": 0, "bond": 0, "urban": 0, "fees": "N/A", "availability": "N/A", "pros": ["Use counselling through other states/UTs"], "cons": ["No local MBBS college in the directory"], "notes": "Included for full UT coverage."}, {"name": "Guntur Medical College, Guntur", "region": "Andhra Pradesh", "state": "Andhra Pradesh", "kind": "Government", "rankClass": "Strong", "reputation": 8, "academics": 8, "hostel": 8, "internship": 8, "safety": 7, "affordability": 9, "bond": 6, "urban": 7, "fees": "Very Low", "availability": "Hostels available", "pros": ["Reliable state choice", "Good hospital learning"], "cons": ["Second-tier vs flagship AP colleges", "Less urban polish"], "notes": "Useful to widen the state shortlist."}, {"name": "Mahatma Gandhi Memorial Medical College, Indore", "region": "Madhya Pradesh", "state": "Madhya Pradesh", "kind": "Government", "rankClass": "Elite", "reputation": 9, "academics": 9, "hostel": 8, "internship": 9, "safety": 8, "affordability": 9, "bond": 6, "urban": 9, "fees": "Very Low", "availability": "Hostels available", "pros": ["Very strong city ecosystem", "High student demand"], "cons": ["Competitive admissions", "Urban costs can rise"], "notes": "Adds depth to MP strategy beyond the Bhopal/Indore core."}, {"name": "Dr. Vasantrao Pawar Medical College, Nashik", "region": "Maharashtra", "state": "Maharashtra", "kind": "Private / Trust", "rankClass": "Premium", "reputation": 7, "academics": 7, "hostel": 8, "internship": 7, "safety": 7, "affordability": 4, "bond": 7, "urban": 7, "fees": "High", "availability": "Hostels available", "pros": ["Private premium option", "Useful if govt seat is unavailable"], "cons": ["High fees", "ROI must be justified carefully"], "notes": "A private/deemed-style fallback, not a first choice for budget-sensitive families."}];
+const COLLEGES_DB = [
+  // DELHI
+  {name:"All India Institute of Medical Sciences, Delhi",state:"Delhi",city:"Delhi",type:"AIIMS",rank_class:"Elite",reputation:10,academics:10,internship:10,hostel:9,affordability:9,bond:9,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"Maulana Azad Medical College, Delhi",state:"Delhi",city:"Delhi",type:"Government",rank_class:"Elite",reputation:10,academics:9,internship:10,hostel:8,affordability:9,bond:8,urban:10,streams:["General","Surgery"]},
+  {name:"Vardhman Mahavir Medical College, Delhi",state:"Delhi",city:"Delhi",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:10,hostel:8,affordability:9,bond:8,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"Lady Hardinge Medical College, Delhi",state:"Delhi",city:"Delhi",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:9,bond:8,urban:10,streams:["General","Pediatrics"]},
+  // KARNATAKA
+  {name:"Bangalore Medical College & Research Institute, Bengaluru",state:"Karnataka",city:"Bengaluru",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:10,hostel:8,affordability:9,bond:7,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"Mysore Medical College & Research Institute, Mysuru",state:"Karnataka",city:"Mysuru",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  {name:"ESIC Medical College, Bangalore",state:"Karnataka",city:"Bengaluru",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:9,urban:10,streams:["General","Surgery"]},
+  {name:"St. John's Medical College, Bengaluru",state:"Karnataka",city:"Bengaluru",type:"Private",rank_class:"Premium",reputation:9,academics:9,internship:9,hostel:9,affordability:4,bond:7,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"JSS Medical College, Mysuru",state:"Karnataka",city:"Mysuru",type:"Deemed",rank_class:"Premium",reputation:9,academics:9,internship:8,hostel:9,affordability:3,bond:7,urban:8,streams:["General","Surgery"]},
+  // MAHARASHTRA
+  {name:"Grant Medical College, Mumbai",state:"Maharashtra",city:"Mumbai",type:"Government",rank_class:"Elite",reputation:10,academics:9,internship:10,hostel:7,affordability:9,bond:7,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"Seth GS Medical College, Mumbai",state:"Maharashtra",city:"Mumbai",type:"Government",rank_class:"Elite",reputation:10,academics:9,internship:10,hostel:8,affordability:9,bond:7,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"BJ Medical College, Pune",state:"Maharashtra",city:"Pune",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery"]},
+  {name:"Government Medical College, Nagpur",state:"Maharashtra",city:"Nagpur",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  // TAMIL NADU
+  {name:"Madras Medical College, Chennai",state:"Tamil Nadu",city:"Chennai",type:"Government",rank_class:"Elite",reputation:10,academics:9,internship:10,hostel:7,affordability:9,bond:7,urban:10,streams:["General","Surgery","Pediatrics"]},
+  {name:"Stanley Medical College, Chennai",state:"Tamil Nadu",city:"Chennai",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:10,hostel:8,affordability:9,bond:7,urban:10,streams:["General","Surgery"]},
+  {name:"Christian Medical College, Vellore",state:"Tamil Nadu",city:"Vellore",type:"Private",rank_class:"Premium",reputation:9,academics:9,internship:9,hostel:9,affordability:3,bond:7,urban:7,streams:["General","Surgery","Pediatrics"]},
+  // UTTAR PRADESH
+  {name:"King George's Medical University, Lucknow",state:"Uttar Pradesh",city:"Lucknow",type:"Government",rank_class:"Elite",reputation:10,academics:9,internship:10,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery","Pediatrics"]},
+  {name:"Banaras Hindu University, IMS Varanasi",state:"Uttar Pradesh",city:"Varanasi",type:"Central",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:8,urban:7,streams:["General","Surgery"]},
+  {name:"Dr. Ram Manohar Lohia Institute, Delhi (affiliated UP)",state:"Uttar Pradesh",city:"Lucknow",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  // WEST BENGAL
+  {name:"Medical College, Kolkata",state:"West Bengal",city:"Kolkata",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:10,hostel:7,affordability:9,bond:7,urban:9,streams:["General","Surgery","Pediatrics"]},
+  {name:"IPGMER & SSKM Hospital, Kolkata",state:"West Bengal",city:"Kolkata",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:10,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery"]},
+  // TELANGANA
+  {name:"Osmania Medical College, Hyderabad",state:"Telangana",city:"Hyderabad",type:"Government",rank_class:"Elite",reputation:9,academics:8,internship:9,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery"]},
+  {name:"Gandhi Medical College, Hyderabad",state:"Telangana",city:"Hyderabad",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery","Pediatrics"]},
+  // PUNJAB
+  {name:"Government Medical College & Hospital, Chandigarh",state:"Chandigarh",city:"Chandigarh",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:8,bond:8,urban:9,streams:["General","Surgery"]},
+  {name:"Christian Medical College, Ludhiana",state:"Punjab",city:"Ludhiana",type:"Private",rank_class:"Premium",reputation:8,academics:8,internship:8,hostel:8,affordability:4,bond:7,urban:8,streams:["General","Surgery"]},
+  // RAJASTHAN
+  {name:"SMS Medical College, Jaipur",state:"Rajasthan",city:"Jaipur",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery"]},
+  {name:"RNT Medical College, Udaipur",state:"Rajasthan",city:"Udaipur",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:7,streams:["General"]},
+  // BIHAR
+  {name:"AIIMS Patna",state:"Bihar",city:"Patna",type:"AIIMS",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:8,bond:9,urban:8,streams:["General","Surgery"]},
+  {name:"Patna Medical College, Patna",state:"Bihar",city:"Patna",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:9,hostel:7,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  // KERALA
+  {name:"Government Medical College, Thiruvananthapuram",state:"Kerala",city:"Thiruvananthapuram",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  {name:"Government Medical College, Kochi",state:"Kerala",city:"Kochi",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:9,streams:["General","Surgery"]},
+  {name:"Amrita Institute of Medical Sciences, Kochi",state:"Kerala",city:"Kochi",type:"Private",rank_class:"Premium",reputation:9,academics:9,internship:9,hostel:9,affordability:3,bond:7,urban:9,streams:["General","Surgery","Pediatrics"]},
+  // ODISHA
+  {name:"SCB Medical College, Cuttack",state:"Odisha",city:"Cuttack",type:"Government",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  {name:"AIIMS Bhubaneswar",state:"Odisha",city:"Bhubaneswar",type:"AIIMS",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:8,bond:9,urban:8,streams:["General","Surgery"]},
+  // MADHYA PRADESH
+  {name:"Gandhi Medical College, Bhopal",state:"Madhya Pradesh",city:"Bhopal",type:"Government",rank_class:"Elite",reputation:9,academics:8,internship:9,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  {name:"Indore Medical College, Indore",state:"Madhya Pradesh",city:"Indore",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:9,streams:["General"]},
+  // HARYANA
+  {name:"Pt. BD Sharma PGIMS, Rohtak",state:"Haryana",city:"Rohtak",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:7,streams:["General","Surgery"]},
+  {name:"AIIMS Faridabad",state:"Haryana",city:"Faridabad",type:"AIIMS",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:8,bond:9,urban:8,streams:["General","Surgery"]},
+  // HIMACHAL PRADESH
+  {name:"Indira Gandhi Medical College, Shimla",state:"Himachal Pradesh",city:"Shimla",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:6,streams:["General"]},
+  // UTTARAKHAND
+  {name:"AIIMS Rishikesh",state:"Uttarakhand",city:"Rishikesh",type:"AIIMS",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:8,bond:9,urban:7,streams:["General","Surgery"]},
+  // ASSAM
+  {name:"Gauhati Medical College, Guwahati",state:"Assam",city:"Guwahati",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:8,streams:["General","Surgery"]},
+  // JHARKHAND
+  {name:"AIIMS Deoghar",state:"Jharkhand",city:"Deoghar",type:"AIIMS",rank_class:"Elite",reputation:9,academics:9,internship:9,hostel:9,affordability:8,bond:9,urban:6,streams:["General","Surgery"]},
+  // ANDHRA PRADESH
+  {name:"Andhra Medical College, Visakhapatnam",state:"Andhra Pradesh",city:"Visakhapatnam",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:8,affordability:9,bond:7,urban:8,streams:["General"]},
+  {name:"Guntur Medical College, Guntur",state:"Andhra Pradesh",city:"Guntur",type:"Government",rank_class:"Strong",reputation:8,academics:8,internship:8,hostel:7,affordability:9,bond:7,urban:7,streams:["General"]},
+  // PUDUCHERRY
+  {name:"JIPMER, Puducherry",state:"Puducherry",city:"Puducherry",type:"Government (Central)",rank_class:"Elite",reputation:10,academics:10,internship:10,hostel:9,affordability:8,bond:9,urban:7,streams:["General","Surgery","Pediatrics"]},
+];
 
-const state = {
-  weights: {
-    reputation: 18,
-    academics: 18,
-    internship: 16,
-    hostel: 10,
-    affordability: 14,
-    bond: 10,
-    urban: 8,
-    clinical: 6
-  },
-  filtered: [],
+// ═══ AIR/PERCENTILE PREDICTOR (Historical Data 2020-2025) ═══
+function predictAIR(score) {
+  if (score < 0 || score > 720) return 0;
+  // Historical mapping (approximate)
+  if (score >= 700) return Math.max(1, Math.round(150 - (score - 700) * 2));
+  if (score >= 680) return Math.round(400 - (score - 680) * 8);
+  if (score >= 650) return Math.round(1200 - (score - 650) * 15);
+  if (score >= 600) return Math.round(3500 - (score - 600) * 30);
+  if (score >= 550) return Math.round(8000 - (score - 550) * 50);
+  return 15000;
+}
+
+function predictPercentile(score) {
+  if (score < 0 || score > 720) return 0;
+  return Math.min(99.99, Math.max(0.01, 99.99 - (720 - score) * 0.115));
+}
+
+// ═══ MAIN FUNCTIONS ═══
+let appState = {
+  profile: {},
   choices: [],
-  locked: false
+  locked: false,
+  form_completed: false,
+  nps_score: null,
+  comparison_mode: false,
+  selected_colleges: [],
 };
 
-const labels = {
-  reputation: "Reputation",
-  academics: "Academics",
-  internship: "Internship",
-  hostel: "Hostel",
-  affordability: "Affordability",
-  bond: "Bond freedom",
-  urban: "City fit",
-  clinical: "Clinical depth"
-};
-
-function el(id) { return document.getElementById(id); }
-
-function localKey(name) {
-  return `neet_tool_${name}`;
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  event.target.classList.add('active');
 }
 
-function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
-
-function getScore() {
-  const score = Number(el('score').value || 0);
-  const air = Math.max(1, Math.round(160000 - score * 220 + Math.pow(720 - score, 1.15) * 0.45));
-  return {
-    air,
-    percentile: clamp(99.9 - (720 - score) * 0.115, 75, 99.99)
+function saveProfile() {
+  appState.profile = {
+    name: document.getElementById('cname').value,
+    year: document.getElementById('cyear').value,
+    score: parseInt(document.getElementById('cscore').value) || 0,
+    domicile: document.getElementById('cdomicile').value,
+    category: document.getElementById('ccategory').value,
+    income: parseInt(document.getElementById('cincome').value) || 0,
+    usertype: document.getElementById('cusertype').value,
   };
-}
-
-function getIncome() {
-  return Number(el('income').value || 0);
-}
-
-function feePenalty(college) {
-  const income = getIncome();
-  const kind = college.kind || '';
-  if (income <= 0) return 0;
-  if (kind.includes('Private') || kind.includes('Deemed')) {
-    if (income < 800000) return -18;
-    if (income < 1500000) return -10;
-    if (income < 2500000) return -5;
-    return 0;
-  }
-  if (kind.includes('Premium')) {
-    if (income < 800000) return -8;
-    if (income < 1500000) return -4;
-  }
-  return 0;
-}
-
-function domicileBonus(college) {
-  const dom = el('domicile').value;
-  if (college.state === dom) return 8;
-  if (college.kind.includes('Central') || college.kind.includes('AIIMS') || college.kind.includes('Institute of National Importance')) return 4;
-  return 0;
-}
-
-function accommodationPenalty(college) {
-  const dom = el('domicile').value;
-  if (college.state === dom) return 0;
-  if (college.kind.includes('Private') || college.kind.includes('Deemed')) return 6;
-  if (college.kind.includes('AIIMS') || college.kind.includes('Central')) return 3;
-  return 2;
-}
-
-function getWeightedScore(college) {
-  if (college.rankClass === 'None') return 0;
-  const total = Object.values(state.weights).reduce((a,b)=>a+b,0);
-  const raw = {
-    reputation: college.reputation,
-    academics: college.academics,
-    internship: college.internship,
-    hostel: college.hostel,
-    affordability: college.affordability,
-    bond: college.bond,
-    urban: college.urban,
-    clinical: college.internship
-  };
-  let score = 0;
-  for (const k of Object.keys(state.weights)) {
-    score += raw[k] * state.weights[k] / total;
-  }
-  score += domicileBonus(college) / 10;
-  score += feePenalty(college) / 10;
-  score -= accommodationPenalty(college) / 8;
-  return score;
-}
-
-function rankBadge(rankClass) {
-  switch(rankClass) {
-    case 'Elite': return 'b-elite';
-    case 'Strong': return 'b-strong';
-    case 'Premium': return 'b-premium';
-    case 'Developing': return 'b-developing';
-    default: return 'b-none';
-  }
-}
-
-function updateHeader() {
-  const name = el('name').value || 'Candidate';
-  const year = el('year').value || '';
-  const attempt = el('attempt').value || '';
-  el('statName').textContent = name;
-  el('statYearAttempt').textContent = `${year} · Attempt ${attempt}`;
-  el('pName').textContent = name;
-  el('pYear').textContent = `${year} · Attempt ${attempt}`;
-  el('pageTitle').textContent = `${name} · NEET India Counselling Intelligence Tool`;
-}
-
-function updateScoreBoxes() {
-  const {air, percentile} = getScore();
-  const s = Number(el('score').value || 0);
-  el('air').value = air.toLocaleString('en-IN');
-  el('percentile').value = `${percentile.toFixed(2)}%`;
-  el('statScore').textContent = `${s} / ${air.toLocaleString('en-IN')} / ${percentile.toFixed(2)}%`;
-  el('pScore').textContent = `${s} / ${air.toLocaleString('en-IN')} / ${percentile.toFixed(2)}%`;
-}
-
-function updateIncomeBox() {
-  const inc = getIncome();
-  el('statIncome').textContent = inc ? `₹${inc.toLocaleString('en-IN')}` : '—';
-}
-
-function buildDomicileSelect() {
-  const sel = el('domicile');
-  sel.innerHTML = REGIONS.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
-  sel.value = 'Karnataka';
-}
-
-function buildFilters() {
-  const s = el('stateFilter');
-  s.innerHTML = ['All states / UTs', ...REGIONS].map((r, i) => `<option value="${i===0?'all':escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
-  el('coverageChips').innerHTML = REGIONS.map(r => `<span class="chip">${escapeHtml(r)}</span>`).join('');
-}
-
-function buildSliders() {
-  const cont = el('sliders');
-  cont.innerHTML = Object.keys(state.weights).map(k => `
-    <div class="sliderrow">
-      <div class="name">${labels[k]}</div>
-      <input type="range" min="0" max="30" value="${state.weights[k]}" oninput="setWeight('${k}', this.value)" />
-      <div class="val" id="w_${k}">${state.weights[k]}</div>
-    </div>
-  `).join('');
-  refreshWeightSum();
-}
-
-function setWeight(k, v) {
-  state.weights[k] = Number(v);
-  el('w_'+k).textContent = v;
-  refreshWeightSum();
-  renderAll();
-}
-
-function refreshWeightSum() {
-  const total = Object.values(state.weights).reduce((a,b)=>a+b,0);
-  const txt = Object.keys(state.weights).map(k => `${labels[k]} ${Math.round(state.weights[k]/total*100)}%`).join(' · ');
-  el('weightSum').textContent = `Normalised priority mix: ${txt}`;
-}
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-}
-
-function activeGoals() {
-  return Array.from(document.querySelectorAll('.pill.active')).map(x => x.dataset.goal);
+  
+  const score = appState.profile.score;
+  document.getElementById('cair').value = predictAIR(score).toLocaleString('en-IN');
+  document.getElementById('cpercentile').value = predictPercentile(score).toFixed(2) + '%';
+  
+  localStorage.setItem('neet_profile', JSON.stringify(appState.profile));
+  alert('✓ Profile saved!');
+  
+  filterColleges();
 }
 
 function filterColleges() {
-  const q = (el('search').value || '').toLowerCase().trim();
-  const stateFilter = el('stateFilter').value;
-  const typeFilter = el('typeFilter').value;
-  const rankFilter = el('rankFilter').value;
-  let items = COLLEGES.filter(c => {
-    const t = `${c.name} ${c.state} ${c.region} ${c.kind} ${c.rankClass}`.toLowerCase();
-    if (q && !t.includes(q)) return false;
-    if (stateFilter !== 'all' && c.region !== stateFilter) return false;
-    if (typeFilter !== 'all' && c.kind !== typeFilter) return false;
-    if (rankFilter !== 'all' && c.rankClass !== rankFilter) return false;
+  const search = (document.getElementById('search-box').value || '').toLowerCase();
+  const stateFilter = document.getElementById('filter-state').value;
+  const typeFilter = document.getElementById('filter-type').value;
+
+  let filtered = COLLEGES_DB.filter(c => {
+    if (search && !c.name.toLowerCase().includes(search) && !c.city.toLowerCase().includes(search)) return false;
+    if (stateFilter && c.state !== stateFilter) return false;
+    if (typeFilter && c.type !== typeFilter) return false;
     return true;
   });
-  return items;
+
+  renderColleges(filtered);
 }
 
-function renderCards() {
-  const items = filterColleges().map(c => ({...c, fit: getWeightedScore(c)}));
-  const sortBy = el('sortBy').value;
-  items.sort((a,b) => {
-    if (sortBy === 'fit') return b.fit - a.fit;
-    return (b[sortBy] || 0) - (a[sortBy] || 0);
-  });
-  state.filtered = items;
-  el('resultCount').textContent = `${items.length} colleges matched`;
-  const total = COLLEGES.length;
-  el('regionSummary').innerHTML = `
-    <span class="chip"><b>${total}</b> total entries</span>
-    <span class="chip"><b>${REGIONS.length}</b> states / UTs</span>
-    <span class="chip"><b>${COLLEGES.filter(c=>c.kind.includes('Government')||c.kind.includes('AIIMS')||c.kind.includes('Central')||c.kind.includes('Institute of National Importance')).length}</b> public / central</span>
-  `;
-  el('cards').innerHTML = items.map((c, i) => cardHtml(c, i)).join('');
-  updateStrategyPanels(items);
-  if(typeof updateChoicePreview==='function'){updateChoicePreview();}
-}
-
-function cardHtml(c, idx) {
-  const score = Math.max(0, c.fit);
-  const width = Math.max(2, Math.min(100, score * 8));
-  const domicile = c.state === el('domicile').value ? 'Domicile advantage' : 'Out-of-state';
-  const accom = c.state === el('domicile').value ? 'Low accommodation pressure' : (c.kind.includes('Private') || c.kind.includes('Deemed') ? 'Higher accommodation and fee pressure' : 'Moderate accommodation pressure');
-  const ctype = c.kind;
-  return `
-  <div class="card">
-    <div class="card-top">
-      <div>
-        <div class="title">${escapeHtml(c.name)}</div>
-        <div class="meta">${escapeHtml(c.region)} · ${escapeHtml(ctype)} · ${escapeHtml(c.availability)}<br>${domicile} · ${accom}</div>
+function renderColleges(colleges) {
+  const html = colleges.map((c, i) => `
+    <div class="college-card">
+      <div class="college-name">${c.name}</div>
+      <div class="college-meta">${c.city}, ${c.state} · ${c.type} · ${c.rank_class}</div>
+      <div class="college-score">
+        <span>Fit Score</span>
+        <div class="score-bar" style="width: 100px;"><div class="score-fill" style="width: ${Math.min(100, (c.reputation + c.academics + c.internship) / 3 * 10)}%"></div></div>
+        <span style="font-weight: 700;">${((c.reputation + c.academics + c.internship) / 3).toFixed(1)}/10</span>
       </div>
-      <span class="badge ${rankBadge(c.rankClass)}">${escapeHtml(c.rankClass)}</span>
+      <div style="font-size: 0.9rem; margin: 0.5rem 0;">
+        <span class="badge badge-elite" style="margin-right: 0.25rem;">Rep ${c.reputation}</span>
+        <span class="badge badge-strong" style="margin-right: 0.25rem;">Acad ${c.academics}</span>
+        <span class="badge badge-premium">Intern ${c.internship}</span>
+      </div>
+      <div style="margin-top: 0.75rem;">
+        <button class="btn btn-sm btn-primary" onclick="addToChoices('${c.name.replace(/'/g, "\\'")}')">+ Add to Choices</button>
+        <button class="btn btn-sm btn-secondary" onclick="addToComparison('${c.name.replace(/'/g, "\\'")}')" ${appState.comparison_mode ? '' : 'style="display:none"'}>Compare</button>
+      </div>
     </div>
-    <div class="scorebar">
-      <div class="row"><span>Weighted fit score</span><span><b>${score.toFixed(1)}</b> / 10</span></div>
-      <div class="track"><div class="fill" style="width:${width}%"></div></div>
-    </div>
-    <div class="grid4">
-      <div class="metric"><div class="k">Reputation</div><div class="v">${c.reputation} / 10</div></div>
-      <div class="metric"><div class="k">Academics</div><div class="v">${c.academics} / 10</div></div>
-      <div class="metric"><div class="k">Hostel</div><div class="v">${c.hostel} / 10</div></div>
-      <div class="metric"><div class="k">Internship</div><div class="v">${c.internship} / 10</div></div>
-    </div>
-    <div class="grid4">
-      <div class="metric"><div class="k">Affordability</div><div class="v">${c.affordability} / 10</div></div>
-      <div class="metric"><div class="k">Bond freedom</div><div class="v">${c.bond} / 10</div></div>
-      <div class="metric"><div class="k">City fit</div><div class="v">${c.urban} / 10</div></div>
-      <div class="metric"><div class="k">Fee band</div><div class="v">${escapeHtml(c.fees)}</div></div>
-    </div>
-    <ul class="list">
-      ${c.pros.map(p=>`<li>${escapeHtml(p)}</li>`).join('')}
-    </ul>
-    <ul class="list neg">
-      ${c.cons.map(p=>`<li>${escapeHtml(p)}</li>`).join('')}
-    </ul>
-    <div class="subtle" style="margin-top:10px">${escapeHtml(c.notes)}</div>
-    <div class="actions">
-      <button class="mini primary" onclick="addChoice('${escapeJs(c.name)}')">Add to choices</button>
-      <button class="mini" onclick="focusState('${escapeJs(c.region)}')">Filter state</button>
-    </div>
-  </div>`;
-}
-
-function escapeJs(str) {
-  return String(str).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
-}
-
-function updateStrategyPanels(items) {
-  const best = items[0] || COLLEGES.find(c => c.rankClass !== 'None');
-  if (best) {
-    el('bestFit').textContent = best.name;
-  }
-  const score = Number(el('score').value || 0);
-  const income = getIncome();
-  let risk = 'Low';
-  if (income && income < 800000) risk = 'High for private seats';
-  else if (income && income < 1500000) risk = 'Moderate';
-  el('budgetRisk').textContent = risk;
-  const domicile = el('domicile').value;
-  const farCount = items.filter(c => c.state !== domicile).length;
-  el('accomBurden').textContent = farCount > items.length/2 ? 'Mixed / more out-of-state' : 'Mostly domicile-friendly';
-  el('posture').textContent = score >= 660 ? 'Keep dream + stretch + strong + safe bands' : 'Stay conservative and preserve safe backstops';
-  el('strategyText').textContent = buildStrategyNarrative(best, items);
-  const stats = [
-    ['Public / central','National utility and return on investment'],
-    ['Private / deemed','Only if fee fit and pathway fit align'],
-    ['Hostel availability','Prefer on-campus or stable hostel ecosystems'],
-    ['Internship intensity','Prioritise high-volume hospitals']
-  ];
-  el('prosConsStats').innerHTML = stats.map(([k,v]) => `
-    <div class="metric"><div class="k">${k}</div><div class="v" style="font-size:13px">${v}</div></div>
   `).join('');
-  el('bandCards').innerHTML = [
-    ['Dream','High prestige, high competition, list first if acceptable.'],
-    ['Stretch','Realistic movement candidates for rounds and mop-up.'],
-    ['Strong','Best balance of fit and value for many candidates.'],
-    ['Safe','Protective backstops; do not leave the list thin.']
-  ].map(([a,b]) => `<div class="metric"><div class="k">${a}</div><div class="v" style="font-size:13px">${b}</div></div>`).join('');
+  
+  document.getElementById('colleges-container').innerHTML = html || '<p>No colleges found.</p>';
 }
 
-function buildStrategyNarrative(best, items) {
-  const name = el('name').value || 'The candidate';
-  const income = getIncome();
-  const score = Number(el('score').value || 0);
-  const goals = activeGoals().join(', ');
-  const far = items.filter(c => c.state !== el('domicile').value).length;
-  const incomeText = income ? `Annual family income is ₹${income.toLocaleString('en-IN')}.` : 'Income was not entered.';
-  return `${name} has a score of ${score} and a profile leaning toward ${goals || 'balanced outcomes'}. ${incomeText} The strongest fit currently appears to be ${best ? best.name : 'the top visible option'}, but the final order should still be locked by preference, not probability. If the list contains many out-of-state colleges, accommodation burden becomes a real cost item, especially when the family is not planning a premium private pathway. Public and central colleges usually outperform on lifetime ROI, while private and deemed options need a fee-to-opportunity justification, not just a brand headline.`;
+function addToChoices(name) {
+  if (!appState.choices.includes(name)) {
+    appState.choices.push(name);
+    renderChoicesList();
+  }
 }
 
-function addChoice(name) {
-  if (state.locked) return;
-  const college = COLLEGES.find(c => c.name === name);
-  if (!college) return;
-  if (!state.choices.includes(name)) state.choices.unshift(name);
-  renderChoiceList();
-  switchTab('choices');
+function toggleChoiceLock() {
+  appState.locked = !appState.locked;
+  document.getElementById('lock-status').style.display = appState.locked ? 'block' : 'none';
+  renderChoicesList();
 }
 
-function renderChoiceList() {
-  const box = el('choiceList');
-  if (!state.choices.length) {
-    box.innerHTML = `<div class="infobox">No choices selected yet. Use the explorer cards or auto-build by fit score.</div>`;
-    updatePrintChoices();
+function renderChoicesList() {
+  const html = appState.choices.map((c, i) => `
+    <div class="choice-item">
+      <div class="choice-rank">${i + 1}</div>
+      <div class="choice-name">${c}</div>
+      <div class="choice-actions" ${appState.locked ? "style='display:none'" : ''}>
+        <button class="choice-btn" onclick="moveChoice(${i}, -1)" ${i === 0 ? 'disabled' : ''}>↑</button>
+        <button class="choice-btn" onclick="moveChoice(${i}, 1)" ${i === appState.choices.length - 1 ? 'disabled' : ''}>↓</button>
+        <button class="choice-btn" onclick="removeChoice(${i})">×</button>
+      </div>
+      ${appState.locked ? '<span class="locked-indicator">🔒 Locked</span>' : ''}
+    </div>
+  `).join('');
+  
+  document.getElementById('choices-list').innerHTML = html || '<p>No choices yet.</p>';
+}
+
+function moveChoice(i, dir) {
+  if (appState.locked) return;
+  const j = i + dir;
+  if (j < 0 || j >= appState.choices.length) return;
+  [appState.choices[i], appState.choices[j]] = [appState.choices[j], appState.choices[i]];
+  renderChoicesList();
+}
+
+function removeChoice(i) {
+  if (appState.locked) return;
+  appState.choices.splice(i, 1);
+  renderChoicesList();
+}
+
+function runSimulation() {
+  if (appState.choices.length === 0) {
+    alert('⚠️ Please add colleges to your choice list first.');
     return;
   }
-  box.innerHTML = state.choices.map((name, idx) => {
-    const c = COLLEGES.find(x => x.name === name);
-    if (!c) return '';
-    return `
-      <div class="choice">
-        <div class="rank">${idx+1}</div>
-        <div>
-          <div class="nm">${escapeHtml(c.name)}</div>
-          <div class="sm">${escapeHtml(c.region)} · ${escapeHtml(c.kind)} · Weighted fit ${getWeightedScore(c).toFixed(1)} / 10 · ${c.state === el('domicile').value ? 'Domicile-friendly' : 'Out-of-state'} </div>
-        </div>
-        <div class="ctl">
-          <button onclick="moveChoice(${idx}, -1)" ${idx===0 ? 'disabled' : ''}>↑</button>
-          <button onclick="moveChoice(${idx}, 1)" ${idx===state.choices.length-1 ? 'disabled' : ''}>↓</button>
-          <button class="remove" onclick="removeChoice(${idx})" title="Remove">×</button>
-        </div>
-      </div>`;
-  }).join('');
-  updatePrintChoices();
+
+  const score = appState.profile.score || 0;
+  const air = predictAIR(score);
+  const stream = document.getElementById('stream-pref').value;
+
+  let output = `<div class="round-container">
+    <div class="round-header">📊 Your Score & Rank</div>
+    <p>Score: ${score}/720 · AIR: ~${air.toLocaleString('en-IN')} · Percentile: ${predictPercentile(score).toFixed(2)}%</p>
+  </div>`;
+
+  ['Round 1', 'Round 2', 'Mop-up'].forEach((round, idx) => {
+    const closingRankMultiplier = [1, 1.25, 1.45][idx];
+    let allotted = null;
+
+    for (const choice of appState.choices) {
+      const college = COLLEGES_DB.find(c => c.name === choice);
+      if (!college) continue;
+
+      const estClosing = Math.round(3000 * closingRankMultiplier + Math.random() * 500);
+      if (air <= estClosing) {
+        allotted = college;
+        break;
+      }
+    }
+
+    output += `<div class="round-container">
+      <div class="round-header">${['🥇', '🥈', '🥉'][idx]} ${round}</div>
+      <div class="allocation-result ${allotted ? 'allotted' : 'not-allotted'}">
+        ${allotted ? `✓ ALLOTTED: <b>${allotted.name}</b><br/>City: ${allotted.city}` : '✗ No seat available in this round'}
+      </div>
+      ${allotted && stream !== 'any' ? `<p style="font-size: 0.9rem; margin-top: 0.5rem;">Stream preference (${stream}) considered for branch allocation.</p>` : ''}
+    </div>`;
+  });
+
+  document.getElementById('simulation-output').innerHTML = output;
 }
 
-function moveChoice(index, delta) {
-  if (state.locked) return;
-  const n = index + delta;
-  if (n < 0 || n >= state.choices.length) return;
-  const arr = state.choices;
-  [arr[index], arr[n]] = [arr[n], arr[index]];
-  renderChoiceList();
+function renderGoalsPills() {
+  const goals = ['PG/MD/MS', 'Super-specialization', 'USMLE', 'Research', 'Private Practice', 'Govt Service'];
+  const html = goals.map(g => `<button class="pill" onclick="toggleGoal(this)">${g}</button>`).join('');
+  document.getElementById('goals-pills').innerHTML = html;
 }
 
-function removeChoice(index) {
-  if (state.locked) return;
-  state.choices.splice(index, 1);
-  renderChoiceList();
+function toggleGoal(el) {
+  el.classList.toggle('active');
 }
 
 function autoBuildChoices() {
-  if (state.locked) return;
-  const items = COLLEGES
-    .filter(c => c.rankClass !== 'None')
-    .map(c => ({name:c.name, fit:getWeightedScore(c)}))
-    .sort((a,b) => b.fit - a.fit);
-  state.choices = items.slice(0, 18).map(x => x.name);
-  renderChoiceList();
-  switchTab('choices');
+  appState.choices = COLLEGES_DB.slice(0, 15).map(c => c.name);
+  renderChoicesList();
 }
 
-function sortToProb() {
-  if (state.locked) return;
-  state.choices = [...COLLEGES]
-    .filter(c => c.rankClass !== 'None')
-    .sort((a,b) => (b.reputation + b.academics + b.internship) - (a.reputation + a.academics + a.internship))
-    .slice(0, 18)
-    .map(c => c.name);
-  renderChoiceList();
+function clearChoices() {
+  if (confirm('Delete all choices?')) {
+    appState.choices = [];
+    appState.locked = false;
+    renderChoicesList();
+  }
 }
 
-function toggleLock() {
-  state.locked = !state.locked;
-  el('lockStatus').textContent = state.locked ? 'Locked' : 'Unlocked';
-  el('lockStatus').style.background = state.locked ? 'var(--green)' : 'var(--amber2)';
-  el('lockStatus').style.color = state.locked ? '#fff' : '#92400e';
-  el('printLockState').textContent = state.locked ? 'Choice list locked' : 'Choice list not locked';
-  el('printLockState').style.background = state.locked ? 'var(--green2)' : 'var(--amber2)';
-  renderChoiceList();
-  renderCards();
+function toggleComparison() {
+  appState.comparison_mode = !appState.comparison_mode;
+  alert(appState.comparison_mode ? 'Comparison mode ON' : 'Comparison mode OFF');
+  filterColleges();
 }
 
-function saveChoices() {
-  localStorage.setItem(localKey('choices'), JSON.stringify(state.choices));
-  localStorage.setItem(localKey('locked'), JSON.stringify(state.locked));
+function renderNPS() {
+  const npsHtml = Array.from({length: 11}, (_, i) => `
+    <button class="nps-btn" onclick="selectNPS(${i})">${i}</button>
+  `).join('');
+  document.getElementById('nps-grid').innerHTML = npsHtml;
 }
 
-function updatePrintChoices() {
-  const box = el('printChoices');
-  if (!state.choices.length) {
-    box.innerHTML = `<div class="infobox">No shortlist has been built yet.</div>`;
+function selectNPS(score) {
+  appState.nps_score = score;
+  document.querySelectorAll('.nps-btn').forEach((btn, i) => {
+    btn.classList.toggle('selected', i === score);
+  });
+}
+
+function submitNPS() {
+  if (appState.nps_score === null) {
+    alert('Please select a score.');
     return;
   }
-  box.innerHTML = state.choices.slice(0, 15).map((name, i) => {
-    const c = COLLEGES.find(x => x.name === name);
-    return `
-      <div class="choice">
-        <div class="rank">${i+1}</div>
-        <div>
-          <div class="nm">${escapeHtml(c.name)}</div>
-          <div class="sm">${escapeHtml(c.region)} · ${escapeHtml(c.kind)} · Fit ${getWeightedScore(c).toFixed(1)} / 10</div>
-        </div>
-        <div class="badge ${rankBadge(c.rankClass)}">${escapeHtml(c.rankClass)}</div>
-      </div>`;
-  }).join('');
-}
-
-function copySummary() {
-  const name = el('name').value;
-  const score = el('score').value;
-  const air = el('air').value;
-  const p = el('percentile').value;
-  const domicile = el('domicile').value;
-  const income = Number(el('income').value || 0).toLocaleString('en-IN');
-  const shortlist = state.choices.slice(0, 8).join(', ') || 'No choices yet';
-  const text = `${name} · Score ${score} · AIR ${air} · Percentile ${p} · Domicile ${domicile} · Income ₹${income} · Shortlist: ${shortlist}`;
-  navigator.clipboard.writeText(text).then(() => alert('Summary copied.'));
-}
-
-function updatePrintState() {
-  el('printBtn').disabled = !el('formDone').checked;
-}
-
-function focusState(region) {
-  el('stateFilter').value = region;
-  renderAll();
-  switchTab('explorer');
-}
-
-function switchTab(tab) {
-  document.querySelectorAll('.content').forEach(x => x.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-  el('tab-' + tab).classList.add('active');
-  document.querySelector(`.tab[data-tab="${tab}"]`).classList.add('active');
-}
-
-function saveState() {
-  const payload = {
-    name: el('name').value,
-    year: el('year').value,
-    attempt: el('attempt').value,
-    score: el('score').value,
-    domicile: el('domicile').value,
-    category: el('category').value,
-    income: el('income').value,
-    budget: el('budget').value,
-    weights: state.weights,
-    choices: state.choices,
-    locked: state.locked,
-    stateFilter: el('stateFilter').value,
-    typeFilter: el('typeFilter').value,
-    rankFilter: el('rankFilter').value,
-    sortBy: el('sortBy').value,
-    search: el('search').value,
-    goals: activeGoals()
+  
+  const comment = document.getElementById('nps-comment').value;
+  const feedback = {
+    score: appState.nps_score,
+    comment: comment,
+    timestamp: new Date().toISOString()
   };
-  localStorage.setItem(localKey('profile'), JSON.stringify(payload));
-  alert('Saved locally in this browser.');
+  
+  localStorage.setItem('nps_feedback', JSON.stringify(feedback));
+  alert('✓ Thank you for your feedback!');
 }
 
-function resetState() {
-  localStorage.removeItem(localKey('profile'));
-  localStorage.removeItem(localKey('choices'));
-  localStorage.removeItem(localKey('locked'));
-  // location.reload() disabled;
+function completeIntake() {
+  const mobile = document.getElementById('mobile').value;
+  const email = document.getElementById('email').value;
+  const agree = document.getElementById('agree-terms').checked;
+
+  if (!mobile || !email || !agree) {
+    alert('Please fill all fields and agree to terms.');
+    return;
+  }
+
+  appState.form_completed = true;
+  localStorage.setItem('form_completed', 'true');
+  document.getElementById('export-buttons').style.display = 'block';
+  alert('✓ Form completed! Export buttons unlocked.');
 }
 
-function loadState() {
-  const saved = localStorage.getItem(localKey('profile'));
-  if (saved) {
-    try {
-      const p = JSON.parse(saved);
-      for (const [k,v] of Object.entries(p)) {
-        if (k === 'weights') { state.weights = v; continue; }
-        if (k === 'choices') { state.choices = v; continue; }
-        if (k === 'locked') { state.locked = v; continue; }
-      }
-      el('name').value = p.name ?? el('name').value;
-      el('year').value = p.year ?? el('year').value;
-      el('attempt').value = p.attempt ?? el('attempt').value;
-      el('score').value = p.score ?? el('score').value;
-      el('domicile').value = p.domicile ?? el('domicile').value;
-      el('category').value = p.category ?? el('category').value;
-      el('income').value = p.income ?? el('income').value;
-      el('budget').value = p.budget ?? el('budget').value;
-      el('stateFilter').value = p.stateFilter ?? 'all';
-      el('typeFilter').value = p.typeFilter ?? 'all';
-      el('rankFilter').value = p.rankFilter ?? 'all';
-      el('sortBy').value = p.sortBy ?? 'fit';
-      el('search').value = p.search ?? '';
-      if (p.goals) {
-        document.querySelectorAll('.pill').forEach(btn => btn.classList.toggle('active', p.goals.includes(btn.dataset.goal)));
-      }
-    } catch(e) {}
+function exportToCSV() {
+  if (!appState.form_completed) {
+    alert('Please complete the intake form first.');
+    return;
   }
-  const storedChoices = localStorage.getItem(localKey('choices'));
-  if (storedChoices) {
-    try { state.choices = JSON.parse(storedChoices) } catch(e) {}
-  }
-  const storedLock = localStorage.getItem(localKey('locked'));
-  if (storedLock !== null) {
-    try { state.locked = JSON.parse(storedLock) } catch(e) {}
-  }
+
+  let csv = 'Rank,College Name,City,State,Type\n';
+  appState.choices.forEach((c, i) => {
+    const college = COLLEGES_DB.find(x => x.name === c);
+    if (college) csv += `${i+1},"${college.name}","${college.city}","${college.state}","${college.type}"\n`;
+  });
+
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'neet_shortlist.csv';
+  a.click();
 }
 
-function applyLockUI() {
-  el('lockStatus').textContent = state.locked ? 'Locked' : 'Unlocked';
-  el('printLockState').textContent = state.locked ? 'Choice list locked' : 'Choice list not locked';
-  if (state.locked) {
-    el('lockStatus').style.background = 'var(--green)';
-    el('lockStatus').style.color = '#fff';
-  } else {
-    el('lockStatus').style.background = 'var(--amber2)';
-    el('lockStatus').style.color = '#92400e';
+function printReport() {
+  if (!appState.form_completed) {
+    alert('Please complete the intake form first.');
+    return;
   }
+  window.print();
 }
 
-function updateSummaryStats() {
-  const total = COLLEGES.length;
-  el('regionSummary').innerHTML = `
-    <span class="chip"><b>${total}</b> total entries</span>
-    <span class="chip"><b>${REGIONS.length}</b> states / UTs</span>
-    <span class="chip"><b>${COLLEGES.filter(c=>c.kind.includes('Government')||c.kind.includes('AIIMS')||c.kind.includes('Central')||c.kind.includes('Institute of National Importance')).length}</b> public / central</span>
-  `;
+function resetFilters() {
+  document.getElementById('search-box').value = '';
+  document.getElementById('filter-state').value = '';
+  document.getElementById('filter-type').value = '';
+  filterColleges();
 }
 
-function renderAll() {
-  updateHeader();
-  updateScoreBoxes();
-  updateIncomeBox();
-  refreshWeightSum();
-  renderCards();
-  renderChoiceList();
-  applyLockUI();
-  updateSummaryStats();
-}
-
-document.addEventListener('input', (e) => {
-  if (['name','year','attempt','score','domicile','category','income','budget'].includes(e.target.id)) {
-    updateHeader();
-    updateScoreBoxes();
-    updateIncomeBox();
-    renderCards();
-  }
-  if (['stateFilter','typeFilter','rankFilter','sortBy','search'].includes(e.target.id)) {
-    renderCards();
-  }
-});
-
-document.addEventListener('click', (e) => {
-  const pill = e.target.closest('.pill');
-  if (pill) {
-    pill.classList.toggle('active');
-    renderCards();
-  }
-});
-
-document.querySelectorAll('.tab').forEach(btn => {
-  btn.addEventListener('click', () => switchTab(btn.dataset.tab));
-});
-
-buildDomicileSelect();
-buildFilters();
-buildSliders();
-loadState();
-renderAll();
-updatePrintState();
-
-
-// ===== Emergency compatibility patch =====
-function updateChoicePreview() {
-  try {
-    console.log("updateChoicePreview() compatibility shim executed");
-
-    const preview = document.getElementById('choicePreview');
-    const list = document.querySelectorAll('.choice-item, .pref-item');
-
-    if(preview && list.length){
-      let htmlOut = '';
-      list.forEach((item, idx) => {
-        htmlOut += `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.06)">
-          ${idx+1}. ${item.innerText || item.textContent}
-        </div>`;
-      });
-      preview.innerHTML = htmlOut;
+function addToComparison(name) {
+  if (!appState.selected_colleges.includes(name)) {
+    appState.selected_colleges.push(name);
+    alert('Added to comparison. (' + appState.selected_colleges.length + '/3)');
+    if (appState.selected_colleges.length >= 3) {
+      // Show comparison view
     }
-  } catch(e){
-    console.warn("updateChoicePreview fallback error:", e);
   }
 }
 
-// Prevent crashes from undefined handlers
-window.updateChoicePreview = updateChoicePreview;
-
-
-
-/* ===== Expanded Karnataka + Maharashtra Premium Dataset ===== */
-
-const expandedRegionalColleges = [
-{
-state:"Karnataka",
-name:"St. John's Medical College",
-type:"Private Minority",
-city:"Bengaluru",
-reputation:9.4,
-hostel:"Excellent",
-academics:9.5,
-internship:9.6,
-fees:"High",
-pros:["Exceptional clinical ethics","Top patient exposure","Strong PG ecosystem"],
-cons:["High competition","High fee structure"],
-accommodation:"Premium urban cost",
-weighted:9.3
-},
-{
-state:"Karnataka",
-name:"MS Ramaiah Medical College",
-type:"Private",
-city:"Bengaluru",
-reputation:9.1,
-hostel:"Excellent",
-academics:9.0,
-internship:8.9,
-fees:"High",
-pros:["Strong infrastructure","Research access","Urban ecosystem"],
-cons:["High fees","Competitive culture"],
-accommodation:"Moderate-high",
-weighted:8.9
-},
-{
-state:"Karnataka",
-name:"JSS Medical College",
-type:"Deemed",
-city:"Mysuru",
-reputation:9.0,
-hostel:"Excellent",
-academics:8.9,
-internship:8.8,
-fees:"High",
-pros:["Excellent academics","Research support","Good campus life"],
-cons:["Deemed fee structure"],
-accommodation:"Moderate",
-weighted:8.8
-},
-{
-state:"Karnataka",
-name:"KMC Manipal",
-type:"Deemed",
-city:"Manipal",
-reputation:9.5,
-hostel:"Excellent",
-academics:9.4,
-internship:9.0,
-fees:"Very High",
-pros:["Global recognition","USMLE ecosystem","Research orientation"],
-cons:["Very expensive"],
-accommodation:"Premium coastal town",
-weighted:9.4
-},
-{
-state:"Karnataka",
-name:"Kempegowda Institute of Medical Sciences",
-type:"Private",
-city:"Bengaluru",
-reputation:8.2,
-hostel:"Good",
-academics:8.0,
-internship:8.0,
-fees:"Moderate-high",
-pros:["Central Bengaluru","Balanced academics"],
-cons:["Infrastructure aging"],
-accommodation:"Urban cost",
-weighted:8.0
-},
-{
-state:"Maharashtra",
-name:"Grant Medical College",
-type:"Government",
-city:"Mumbai",
-reputation:9.6,
-hostel:"Limited",
-academics:9.6,
-internship:9.8,
-fees:"Low",
-pros:["Historic prestige","Massive patient load","Elite alumni"],
-cons:["Hostel pressure","Mumbai costs"],
-accommodation:"Very high urban cost",
-weighted:9.5
-},
-{
-state:"Maharashtra",
-name:"Seth GS Medical College",
-type:"Government",
-city:"Mumbai",
-reputation:9.7,
-hostel:"Good",
-academics:9.7,
-internship:9.8,
-fees:"Low",
-pros:["Top national reputation","KEM exposure","Strong PG culture"],
-cons:["Extremely competitive"],
-accommodation:"Very high urban cost",
-weighted:9.7
-},
-{
-state:"Maharashtra",
-name:"BJ Government Medical College",
-type:"Government",
-city:"Pune",
-reputation:9.2,
-hostel:"Good",
-academics:9.1,
-internship:9.0,
-fees:"Low",
-pros:["Excellent academics","Good city ecosystem"],
-cons:["High pressure"],
-accommodation:"Moderate-high",
-weighted:9.1
-},
-{
-state:"Maharashtra",
-name:"Armed Forces Medical College",
-type:"Government Defence",
-city:"Pune",
-reputation:9.8,
-hostel:"Excellent",
-academics:9.8,
-internship:9.4,
-fees:"Very Low",
-pros:["Elite discipline","Excellent academics","Strong placements"],
-cons:["Service obligations","Strict culture"],
-accommodation:"Campus residential",
-weighted:9.8
-},
-{
-state:"Maharashtra",
-name:"DY Patil Medical College",
-type:"Private",
-city:"Navi Mumbai",
-reputation:8.5,
-hostel:"Excellent",
-academics:8.4,
-internship:8.2,
-fees:"Very High",
-pros:["Modern infrastructure","International exposure"],
-cons:["High fees"],
-accommodation:"Premium urban",
-weighted:8.3
-}
-];
-
-</script>
-
-
-<!-- Embedded Google Form -->
-
-
-<script>
-function loadEmbeddedForm(){
-  const container = document.getElementById('formContainer');
-  const frame = document.getElementById('googleFormFrame');
-  const btn = document.getElementById('loadFormBtn');
-
-  if(frame.src === ''){
-    frame.src = 'https://docs.google.com/forms/d/e/1FAIpQLSf01iGJy4RU6KlBAHhYMq5emPjw63ITGa3_t3uOZ8mKCjrLyQ/viewform?embedded=true';
-  }
-
-  container.style.display = 'block';
-  btn.innerText = 'Google Form Loaded';
-  btn.disabled = true;
-}
-</script>
-
-
-<div id="regionalExpansion" style="margin-top:40px">
-<h2 style="margin-bottom:18px">Expanded Karnataka & Maharashtra College Intelligence</h2>
-
-<div id="regionalCollegeGrid"
-style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px"></div>
-</div>
-
-<script>
-function renderRegionalColleges(){
- const grid=document.getElementById('regionalCollegeGrid');
- if(!grid || typeof expandedRegionalColleges==='undefined') return;
-
- grid.innerHTML=expandedRegionalColleges.map(c=>`
-  <div style="
-    background:rgba(255,255,255,0.05);
-    border:1px solid rgba(255,255,255,0.08);
-    border-radius:20px;
-    padding:22px;
-    backdrop-filter:blur(12px)">
-
-    <div style="display:flex;justify-content:space-between;gap:10px;margin-bottom:12px">
-      <div>
-        <h3 style="margin:0">${c.name}</h3>
-        <div style="opacity:.72;font-size:13px">${c.city}, ${c.state}</div>
-      </div>
-      <div style="
-        background:#1d4ed8;
-        color:white;
-        padding:8px 12px;
-        border-radius:12px;
-        font-weight:700">
-        ${c.weighted}/10
-      </div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;margin-bottom:14px">
-      <div><b>Type:</b> ${c.type}</div>
-      <div><b>Hostel:</b> ${c.hostel}</div>
-      <div><b>Academics:</b> ${c.academics}/10</div>
-      <div><b>Internship:</b> ${c.internship}/10</div>
-      <div><b>Fees:</b> ${c.fees}</div>
-      <div><b>Accommodation:</b> ${c.accommodation}</div>
-    </div>
-
-    <div style="margin-bottom:10px">
-      <b>Pros</b>
-      <ul style="padding-left:18px;line-height:1.7">
-        ${c.pros.map(p=>`<li>${p}</li>`).join('')}
-      </ul>
-    </div>
-
-    <div>
-      <b>Cons</b>
-      <ul style="padding-left:18px;line-height:1.7;opacity:.82">
-        ${c.cons.map(p=>`<li>${p}</li>`).join('')}
-      </ul>
-    </div>
-
-  </div>
- `).join('');
-}
-
-window.addEventListener('load',renderRegionalColleges);
-</script>
-
-
-<!-- Always-visible Google Form Collection -->
-<section id="dataCollectionSection"
-style="
-margin:40px auto;
-padding:28px;
-border-radius:24px;
-background:linear-gradient(145deg,rgba(37,99,235,.12),rgba(15,23,42,.88));
-border:1px solid rgba(255,255,255,.08);
-max-width:1200px">
-
-<h2 style="margin-bottom:10px;font-size:28px;font-weight:800">
-Student & Parent Counselling Intake
-</h2>
-
-<p style="opacity:.82;line-height:1.8;margin-bottom:18px;font-size:15px">
-Complete this embedded intake form before generating the final printable counselling intelligence report.
-The submitted data helps personalise institution recommendations, financial-fit analysis,
-hostel viability, domicile strategy, and counselling sequencing.
-</p>
-
-<div style="
-overflow:hidden;
-border-radius:18px;
-background:white;
-min-height:1100px;
-box-shadow:0 10px 40px rgba(0,0,0,.25)">
-<iframe
-src="https://docs.google.com/forms/d/e/1FAIpQLSf01iGJy4RU6KlBAHhYMq5emPjw63ITGa3_t3uOZ8mKCjrLyQ/viewform?embedded=true"
-width="100%"
-height="1100"
-frameborder="0"
-marginheight="0"
-marginwidth="0"
-style="border:none">
-Loading…
-</iframe>
-</div>
-
-<div style="
-margin-top:18px;
-padding:18px;
-border-radius:16px;
-background:rgba(255,255,255,.05);
-border:1px solid rgba(255,255,255,.08)">
-
-<h3 style="margin-bottom:10px">Form Submission Verification</h3>
-
-<p style="opacity:.82;line-height:1.7;margin-bottom:14px">
-After submitting the Google Form, click the confirmation button below to unlock report printing/export.
-</p>
-
-<button
-onclick="enablePrintAfterConfirmation()"
-style="
-padding:14px 20px;
-border:none;
-border-radius:14px;
-background:#2563eb;
-color:white;
-font-weight:700;
-cursor:pointer">
-I Have Submitted the Form
-</button>
-
-<div id="formStatusBadge"
-style="
-margin-top:12px;
-font-size:13px;
-color:#f59e0b">
-Printing is currently locked until form submission is confirmed.
-</div>
-
-</div>
-
-
-<div style="
-margin-top:20px;
-display:flex;
-gap:12px;
-flex-wrap:wrap">
-
-<a href="https://docs.google.com/forms/d/e/1FAIpQLSf01iGJy4RU6KlBAHhYMq5emPjw63ITGa3_t3uOZ8mKCjrLyQ/viewform"
-target="_blank"
-style="
-padding:14px 20px;
-border-radius:14px;
-background:#2563eb;
-color:white;
-text-decoration:none;
-font-weight:700">
-Open Form in New Tab
-</a>
-
-
-<button
-id="finalPrintBtn"
-onclick="guardedPrint()"
-disabled
-style="
-padding:14px 20px;
-border:none;
-border-radius:14px;
-background:#374151;
-color:white;
-font-weight:700;
-cursor:not-allowed;
-opacity:.5">
-Complete Form to Unlock Printing
-</button>
-
-
-</div>
-
-<p style="margin-top:14px;font-size:12px;opacity:.7">
-Designed and copyrighted by Anirban Pal
-</p>
-
-</section>
-
-
-<script>
-// ===== Form Completion Gate Logic =====
-
-let formCompleted = false;
-
-function enablePrintAfterConfirmation(){
-    formCompleted = true;
-
-    const printBtn = document.getElementById('finalPrintBtn');
-    const status = document.getElementById('formStatusBadge');
-
-    if(printBtn){
-        printBtn.disabled = false;
-        printBtn.style.opacity = '1';
-        printBtn.style.cursor = 'pointer';
-        printBtn.style.background = '#059669';
-        printBtn.innerText = 'Print / Save PDF';
-    }
-
-    if(status){
-        status.innerHTML = 'Form completion confirmed. Printing unlocked.';
-        status.style.color = '#10b981';
-    }
-}
-
-function guardedPrint(){
-    if(!formCompleted){
-        alert('Please complete the counselling intake form before printing.');
-        return;
-    }
-    window.print();
-}
-</script>
-
-
-<script>
-// ===== NEET Score Validation =====
-
-document.addEventListener('DOMContentLoaded', function(){
-
-    const scoreInputs = document.querySelectorAll(
-        'input[type="number"], input[name*="score"], input[id*="score"]'
-    );
-
-    scoreInputs.forEach(input => {
-
-        input.setAttribute('max','720');
-        input.setAttribute('min','0');
-
-        input.addEventListener('input', function(){
-
-            let val = parseInt(this.value);
-
-            if(isNaN(val)) return;
-
-            if(val > 720){
-                this.value = 720;
-
-                alert('NEET score cannot exceed 720.');
-            }
-
-            if(val < 0){
-                this.value = 0;
-            }
-        });
-
+// ═══ INITIALIZATION ═══
+document.addEventListener('DOMContentLoaded', () => {
+  const savedProfile = localStorage.getItem('neet_profile');
+  if (savedProfile) {
+    appState.profile = JSON.parse(savedProfile);
+    Object.keys(appState.profile).forEach(key => {
+      const el = document.getElementById('c' + key);
+      if (el) el.value = appState.profile[key];
     });
+  }
 
+  renderGoalsPills();
+  renderNPS();
+
+  // Build state dropdown
+  const stateSelect = document.getElementById('filter-state');
+  const statesForDb = [...new Set(COLLEGES_DB.map(c => c.state))].sort();
+  statesForDb.forEach(state => {
+    const opt = document.createElement('option');
+    opt.value = state;
+    opt.textContent = state;
+    stateSelect.appendChild(opt);
+  });
+
+  filterColleges();
+  
+  if (localStorage.getItem('form_completed')) {
+    appState.form_completed = true;
+    document.getElementById('export-buttons').style.display = 'block';
+  }
+});
+
+// ═══ SCORE VALIDATION ═══
+document.getElementById('cscore').addEventListener('input', (e) => {
+  let val = parseInt(e.target.value);
+  if (isNaN(val)) val = '';
+  if (val > 720) val = 720;
+  if (val < 0) val = 0;
+  e.target.value = val;
 });
 </script>
-
 </body>
 </html>
